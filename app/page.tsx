@@ -11,6 +11,7 @@ export default function Home() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Mapping of language codes to full language names
   const languages = [
     { code: "as", label: "Assamese" },
     { code: "bn", label: "Bengali" },
@@ -35,6 +36,7 @@ export default function Home() {
     { code: "ur", label: "Urdu " },
   ];
 
+  // Function to handle text translation
   const handleTranslate = async () => {
     setLoading(true);
     try {
@@ -51,6 +53,7 @@ export default function Home() {
     }
   };
 
+  // Function to handle text-to-speech (TTS)
   const handleTextToSpeech = async () => {
     setLoading(true);
     try {
@@ -70,6 +73,7 @@ export default function Home() {
     }
   };
 
+  // Function to handle ASR (Automatic Speech Recognition)
   const handleASR = async () => {
     setLoading(true);
     if (!audioFile) {
@@ -101,22 +105,25 @@ export default function Home() {
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
       <div className="flex flex-col gap-2">
+        {/* Source language select */}
         <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
           {languages.map((lang) => (
             <option key={lang.code} value={lang.code}>
-              {lang.label}
+              {lang.label} {/* Display full language name */}
             </option>
           ))}
         </select>
 
+        {/* Target language select */}
         <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2">
           {languages.map((lang) => (
             <option key={lang.code} value={lang.code}>
-              {lang.label}
+              {lang.label} {/* Display full language name */}
             </option>
           ))}
         </select>
 
+        {/* Text area for user input */}
         <textarea
           className="border p-2"
           value={text}
@@ -124,26 +131,32 @@ export default function Home() {
           placeholder="Enter text to translate"
         />
 
+        {/* Button to trigger translation */}
         <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">
           Translate
         </button>
 
+        {/* Button to trigger text-to-speech */}
         <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
           Text-to-Speech
         </button>
 
+        {/* Input for audio file */}
         <input
           type="file"
           onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
           accept="audio/*"
           className="border p-2"
         />
+        {/* Button to trigger ASR */}
         <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
           Automatic Speech Recognition
         </button>
 
+        {/* Loading state */}
         {loading && <p>Loading...</p>}
 
+        {/* Display translated text */}
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
         <p className="border p-2">{translatedText}</p>
       </div>
