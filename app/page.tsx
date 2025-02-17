@@ -8,6 +8,9 @@ export default function Home() {
   const [translatedText, setTranslatedText] = useState<string>("");
   const [sourceLang, setSourceLang] = useState<string>("hin_Deva");
   const [targetLang, setTargetLang] = useState<string>("eng_Latn");
+  const [base64Audio, setBase64Audio] = useState<string>("");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [asrText, setAsrText] = useState<string>("");
 
   const languages = [
     { code: "asm_Beng", label: "Assamese" },
@@ -49,6 +52,36 @@ export default function Home() {
     }
   };
 
+  const handleTTS = async () => {
+    try {
+      const response = await axios.post("https://bhashini-python.onrender.com/tts", {
+        source_language: sourceLang,
+        text: translatedText,
+      });
+      setBase64Audio(response.data.base64_string);
+    } catch (error) {
+      console.error("Text-to-Speech error:", error);
+    }
+  };
+
+  const handleASR = async () => {
+    if (!audioFile) return;
+
+    const formData = new FormData();
+    formData.append("audio", audioFile);
+
+    try {
+      const response = await axios.post("https://bhashini-python.onrender.com/asr", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setAsrText(response.data.translated_text); // Assuming the ASR API returns translated text
+    } catch (error) {
+      console.error("ASR error:", error);
+    }
+  };
+
   return (
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
@@ -85,6 +118,32 @@ export default function Home() {
         {/* Translated Text */}
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
         <p className="border p-2">{translatedText}</p>
+
+        {/* Text-to-Speech Button */}
+        <button onClick={handleTTS} className="bg-green-500 text-white p-2 rounded mt-4">Convert to Speech</button>
+        {base64Audio && (
+          <audio controls className="mt-4">
+            <source src={`data:audio/mp3;base64,${base64Audio}`} type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+        )}
+
+        {/* Audio File Input for ASR */}
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
+          className="border p-2 mt-4"
+        />
+        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded mt-2">Convert Speech to Text</button>
+
+        {/* ASR Text */}
+        {asrText && (
+          <div className="mt-4">
+            <h2 className="text-xl font-semibold">ASR Result:</h2>
+            <p className="border p-2">{asrText}</p>
+          </div>
+        )}
       </div>
     </div>
   );
