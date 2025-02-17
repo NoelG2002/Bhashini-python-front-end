@@ -3,95 +3,111 @@
 import { useState } from "react";
 import axios from "axios";
 
-const languageOptions = [
-  "Assamese", "Bengali", "Bodo", "Dogri", "English", "Gujarati", "Hindi", "Kannada",
-  "Kashmiri (Arabic)", "Kashmiri (Devanagari)", "Konkani", "Malayalam", "Marathi", "Maithili",
-  "Manipuri (Bengali)", "Manipuri (Meitei)", "Nepali", "Odia", "Punjabi", "Sanskrit", "Santali",
-  "Sindhi (Arabic)", "Sindhi (Devanagari)", "Tamil", "Telugu", "Urdu"
-];
+const languageCodeMapping = {
+  Assamese: "asm_Beng",
+  Bengali: "ben_Beng",
+  Bodo: "brx_Deva",
+  Dogri: "doi_Deva",
+  English: "eng_Latn",
+  Gujarati: "guj_Gujr",
+  Hindi: "hin_Deva",
+  Kannada: "kan_Knda",
+  "Kashmiri (Arabic)": "kas_Arab",
+  "Kashmiri (Devanagari)": "kas_Deva",
+  Konkani: "gom_Deva",
+  Malayalam: "mal_Mlym",
+  Marathi: "mar_Deva",
+  Maithili: "mai_Deva",
+  "Manipuri (Bengali)": "mni_Beng",
+  "Manipuri (Meitei)": "mni_Mtei",
+  Nepali: "npi_Deva",
+  Odia: "ory_Orya",
+  Punjabi: "pan_Guru",
+  Sanskrit: "san_Deva",
+  Santali: "sat_Olck",
+  "Sindhi (Arabic)": "snd_Arab",
+  "Sindhi (Devanagari)": "snd_Deva",
+  Tamil: "tam_Taml",
+  Telugu: "tel_Telu",
+  Urdu: "urd_Arab",
+};
 
 const Home = () => {
-  const [text, setText] = useState("");
   const [sourceLanguage, setSourceLanguage] = useState("English");
   const [targetLanguage, setTargetLanguage] = useState("Hindi");
+  const [recognizedText, setRecognizedText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [audio, setAudio] = useState("");
 
-  const handleTranslation = async () => {
+  const handleASR = async (event) => {
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    // Map the selected languages to their corresponding codes
+    const sourceLangCode = languageCodeMapping[sourceLanguage];
+    const targetLangCode = languageCodeMapping[targetLanguage];
+
+    // Append the source and target language codes
+    formData.append("source_language", sourceLangCode);
+    formData.append("target_language", targetLangCode);
+
     try {
-      const response = await axios.post("http://localhost:8000/translate", {
-        text,
-        source_language: sourceLanguage,
-        target_language: targetLanguage,
+      const response = await axios.post("http://localhost:8000/asr_nmt", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      // Update the state with recognized and translated text
+      setRecognizedText(response.data.recognized_text);
       setTranslatedText(response.data.translated_text);
     } catch (error) {
-      console.error("Error during translation:", error);
-    }
-  };
-
-  const handleTextToSpeech = async () => {
-    try {
-      const response = await axios.post("http://localhost:8000/tts", {
-        text,
-        source_language: sourceLanguage,
-        target_language: targetLanguage,
-      });
-      setAudio(response.data.audio_base64);
-    } catch (error) {
-      console.error("Error during TTS:", error);
+      console.error("Error during ASR:", error);
     }
   };
 
   return (
     <div>
-      <h1>Language Translation</h1>
-      <textarea
-        placeholder="Enter text to translate"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <br />
+      <h1>Automatic Speech Recognition and Translation</h1>
+      
       <label>Source Language: </label>
       <select
         value={sourceLanguage}
         onChange={(e) => setSourceLanguage(e.target.value)}
       >
-        {languageOptions.map((lang) => (
+        {Object.keys(languageCodeMapping).map((lang) => (
           <option key={lang} value={lang}>
             {lang}
           </option>
         ))}
       </select>
       <br />
+      
       <label>Target Language: </label>
       <select
         value={targetLanguage}
         onChange={(e) => setTargetLanguage(e.target.value)}
       >
-        {languageOptions.map((lang) => (
+        {Object.keys(languageCodeMapping).map((lang) => (
           <option key={lang} value={lang}>
             {lang}
           </option>
         ))}
       </select>
       <br />
-      <button onClick={handleTranslation}>Translate</button>
+      
+      <input type="file" accept="audio/*" onChange={handleASR} />
       <br />
-      <button onClick={handleTextToSpeech}>Text to Speech</button>
-      <br />
+      
+      {recognizedText && (
+        <div>
+          <h2>Recognized Text:</h2>
+          <p>{recognizedText}</p>
+        </div>
+      )}
+      
       {translatedText && (
         <div>
           <h2>Translated Text:</h2>
           <p>{translatedText}</p>
-        </div>
-      )}
-      {audio && (
-        <div>
-          <h2>Text to Speech (Audio):</h2>
-          <audio controls>
-            <source src={`data:audio/mp3;base64,${audio}`} type="audio/mp3" />
-          </audio>
         </div>
       )}
     </div>
