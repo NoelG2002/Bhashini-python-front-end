@@ -6,36 +6,33 @@ import axios from "axios";
 export default function Home() {
   const [text, setText] = useState<string>("");
   const [translatedText, setTranslatedText] = useState<string>("");
-  const [sourceLang, setSourceLang] = useState<string>("hin_Deva");
-  const [targetLang, setTargetLang] = useState<string>("eng_Latn");
+  const [sourceLang, setSourceLang] = useState<string>("hi");
+  const [targetLang, setTargetLang] = useState<string>("en");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const languages = [
-    { code: "asm_Beng", label: "Assamese" },
-    { code: "ben_Beng", label: "Bengali" },
-    { code: "brx_Deva", label: "Bodo" },
-    { code: "doi_Deva", label: "Dogri" },
-    { code: "eng_Latn", label: "English" },
-    { code: "gom_Deva", label: "Konkani" },
-    { code: "hin_Deva", label: "Hindi" },
-    { code: "kas_Arab", label: "Kashmiri (Arabic)" },
-    { code: "kas_Deva", label: "Kashmiri (Devanagari)" },
-    { code: "mai_Deva", label: "Maithili" },
-    { code: "mal_Mlym", label: "Malayalam" },
-    { code: "mar_Deva", label: "Marathi" },
-    { code: "mni_Beng", label: "Manipuri (Bengali)" },
-    { code: "mni_Mtei", label: "Manipuri (Meitei)" },
-    { code: "npi_Deva", label: "Nepali" },
-    { code: "ory_Orya", label: "Odia" },
-    { code: "pan_Guru", label: "Punjabi (Gurmukhi)" },
-    { code: "san_Deva", label: "Sanskrit" },
-    { code: "sat_Olck", label: "Santali" },
-    { code: "snd_Arab", label: "Sindhi (Arabic)" },
-    { code: "snd_Deva", label: "Sindhi (Devanagari)" },
-    { code: "tam_Taml", label: "Tamil" },
-    { code: "tel_Telu", label: "Telugu" },
-    { code: "urd_Arab", label: "Urdu (Arabic)" },
+    { code: "as", label: "Assamese" },
+    { code: "bn", label: "Bengali" },
+    { code: "brx", label: "Bodo" },
+    { code: "doi", label: "Dogri" },
+    { code: "en", label: "English" },
+    { code: "gom", label: "Konkani" },
+    { code: "hi", label: "Hindi" },
+    { code: "ks", label: "Kashmiri" },
+    { code: "mai", label: "Maithili" },
+    { code: "ml", label: "Malayalam" },
+    { code: "mr", label: "Marathi" },
+    { code: "mni", label: "Manipuri" },
+    { code: "ne", label: "Nepali" },
+    { code: "or", label: "Odia" },
+    { code: "pa", label: "Punjabi" },
+    { code: "sa", label: "Sanskrit" },
+    { code: "sat", label: "Santali" },
+    { code: "sd", label: "Sindhi" },
+    { code: "ta", label: "Tamil" },
+    { code: "te", label: "Telugu" },
+    { code: "ur", label: "Urdu " },
   ];
 
   const handleTranslate = async () => {
