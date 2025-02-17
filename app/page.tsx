@@ -88,7 +88,7 @@ export default function Home() {
     formData.append("target_language", targetLang);
 
     try {
-      const response = await axios.post("https://bhashini-python.onrender.com/asr", formData, {
+      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
