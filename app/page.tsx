@@ -11,7 +11,7 @@ export default function Home() {
 
   const handleTranslate = async () => {
     try {
-      const response = await axios.post("https://bhashini-fastapi.onrender.com/translate", {
+      const response = await axios.post("https://bhashini-python.onrender.com/translate", {
         source_language: sourceLang,
         target_language: targetLang,
         text: text,
