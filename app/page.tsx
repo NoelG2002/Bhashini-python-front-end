@@ -3,115 +3,153 @@
 import { useState } from "react";
 import axios from "axios";
 
-const languageCodeMapping = {
-  Assamese: "asm_Beng",
-  Bengali: "ben_Beng",
-  Bodo: "brx_Deva",
-  Dogri: "doi_Deva",
-  English: "eng_Latn",
-  Gujarati: "guj_Gujr",
-  Hindi: "hin_Deva",
-  Kannada: "kan_Knda",
-  "Kashmiri (Arabic)": "kas_Arab",
-  "Kashmiri (Devanagari)": "kas_Deva",
-  Konkani: "gom_Deva",
-  Malayalam: "mal_Mlym",
-  Marathi: "mar_Deva",
-  Maithili: "mai_Deva",
-  "Manipuri (Bengali)": "mni_Beng",
-  "Manipuri (Meitei)": "mni_Mtei",
-  Nepali: "npi_Deva",
-  Odia: "ory_Orya",
-  Punjabi: "pan_Guru",
-  Sanskrit: "san_Deva",
-  Santali: "sat_Olck",
-  "Sindhi (Arabic)": "snd_Arab",
-  "Sindhi (Devanagari)": "snd_Deva",
-  Tamil: "tam_Taml",
-  Telugu: "tel_Telu",
-  Urdu: "urd_Arab",
-};
+export default function Home() {
+  const [text, setText] = useState<string>("");
+  const [translatedText, setTranslatedText] = useState<string>("");
+  const [sourceLang, setSourceLang] = useState<string>("hin_Deva");
+  const [targetLang, setTargetLang] = useState<string>("eng_Latn");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-const Home = () => {
-  const [sourceLanguage, setSourceLanguage] = useState("English");
-  const [targetLanguage, setTargetLanguage] = useState("Hindi");
-  const [recognizedText, setRecognizedText] = useState("");
-  const [translatedText, setTranslatedText] = useState("");
-  const [audio, setAudio] = useState("");
+  const languages = [
+    { code: "asm_Beng", label: "Assamese" },
+    { code: "ben_Beng", label: "Bengali" },
+    { code: "brx_Deva", label: "Bodo" },
+    { code: "doi_Deva", label: "Dogri" },
+    { code: "eng_Latn", label: "English" },
+    { code: "gom_Deva", label: "Konkani" },
+    { code: "hin_Deva", label: "Hindi" },
+    { code: "kas_Arab", label: "Kashmiri (Arabic)" },
+    { code: "kas_Deva", label: "Kashmiri (Devanagari)" },
+    { code: "mai_Deva", label: "Maithili" },
+    { code: "mal_Mlym", label: "Malayalam" },
+    { code: "mar_Deva", label: "Marathi" },
+    { code: "mni_Beng", label: "Manipuri (Bengali)" },
+    { code: "mni_Mtei", label: "Manipuri (Meitei)" },
+    { code: "npi_Deva", label: "Nepali" },
+    { code: "ory_Orya", label: "Odia" },
+    { code: "pan_Guru", label: "Punjabi (Gurmukhi)" },
+    { code: "san_Deva", label: "Sanskrit" },
+    { code: "sat_Olck", label: "Santali" },
+    { code: "snd_Arab", label: "Sindhi (Arabic)" },
+    { code: "snd_Deva", label: "Sindhi (Devanagari)" },
+    { code: "tam_Taml", label: "Tamil" },
+    { code: "tel_Telu", label: "Telugu" },
+    { code: "urd_Arab", label: "Urdu (Arabic)" },
+  ];
 
-  const handleASR = async (event) => {
-    const formData = new FormData();
-    formData.append("file", event.target.files[0]);
-
-    // Map the selected languages to their corresponding codes
-    const sourceLangCode = languageCodeMapping[sourceLanguage];
-    const targetLangCode = languageCodeMapping[targetLanguage];
-
-    // Append the source and target language codes
-    formData.append("source_language", sourceLangCode);
-    formData.append("target_language", targetLangCode);
-
+  const handleTranslate = async () => {
+    setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/asr_nmt", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post("https://bhashini-python.onrender.com/translate", {
+        source_language: sourceLang,
+        target_language: targetLang,
+        text: text,
       });
-
-      // Update the state with recognized and translated text
-      setRecognizedText(response.data.recognized_text);
       setTranslatedText(response.data.translated_text);
     } catch (error) {
-      console.error("Error during ASR:", error);
+      console.error("Translation error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTextToSpeech = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("https://bhashini-python.onrender.com/tts", {
+        source_language: sourceLang,
+        text: text,
+      });
+      const audioBase64 = response.data.base64_string;
+      const audioBlob = new Blob([new Uint8Array(atob(audioBase64).split("").map(char => char.charCodeAt(0)))], { type: "audio/mp3" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error("TTS error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleASR = async () => {
+    setLoading(true);
+    if (!audioFile) {
+      console.error("No audio file selected");
+      setLoading(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", audioFile);
+    formData.append("source_language", sourceLang);
+    formData.append("target_language", targetLang);
+
+    try {
+      const response = await axios.post("https://bhashini-python.onrender.com/asr", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setTranslatedText(response.data.translated_text);
+    } catch (error) {
+      console.error("ASR error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Automatic Speech Recognition and Translation</h1>
-      
-      <label>Source Language: </label>
-      <select
-        value={sourceLanguage}
-        onChange={(e) => setSourceLanguage(e.target.value)}
-      >
-        {Object.keys(languageCodeMapping).map((lang) => (
-          <option key={lang} value={lang}>
-            {lang}
-          </option>
-        ))}
-      </select>
-      <br />
-      
-      <label>Target Language: </label>
-      <select
-        value={targetLanguage}
-        onChange={(e) => setTargetLanguage(e.target.value)}
-      >
-        {Object.keys(languageCodeMapping).map((lang) => (
-          <option key={lang} value={lang}>
-            {lang}
-          </option>
-        ))}
-      </select>
-      <br />
-      
-      <input type="file" accept="audio/*" onChange={handleASR} />
-      <br />
-      
-      {recognizedText && (
-        <div>
-          <h2>Recognized Text:</h2>
-          <p>{recognizedText}</p>
-        </div>
-      )}
-      
-      {translatedText && (
-        <div>
-          <h2>Translated Text:</h2>
-          <p>{translatedText}</p>
-        </div>
-      )}
+    <div className="p-6 max-w-lg mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
+      <div className="flex flex-col gap-2">
+        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
+          {languages.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
+
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2">
+          {languages.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
+
+        <textarea
+          className="border p-2"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter text to translate"
+        />
+
+        <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">
+          Translate
+        </button>
+
+        <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
+          Text-to-Speech
+        </button>
+
+        <input
+          type="file"
+          onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
+          accept="audio/*"
+          className="border p-2"
+        />
+        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
+          Automatic Speech Recognition
+        </button>
+
+        {loading && <p>Loading...</p>}
+
+        <h2 className="text-xl font-semibold mt-4">Translation:</h2>
+        <p className="border p-2">{translatedText}</p>
+      </div>
     </div>
   );
-};
-
-export default Home;
+}
