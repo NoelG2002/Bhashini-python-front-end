@@ -8,9 +8,7 @@ export default function Home() {
   const [translatedText, setTranslatedText] = useState<string>("");
   const [sourceLang, setSourceLang] = useState<string>("hin_Deva");
   const [targetLang, setTargetLang] = useState<string>("eng_Latn");
-  const [base64Audio, setBase64Audio] = useState<string>("");
-  const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [asrText, setAsrText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const languages = [
     { code: "asm_Beng", label: "Assamese" },
@@ -40,6 +38,7 @@ export default function Home() {
   ];
 
   const handleTranslate = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("https://bhashini-python.onrender.com/translate", {
         source_language: sourceLang,
@@ -49,36 +48,43 @@ export default function Home() {
       setTranslatedText(response.data.translated_text);
     } catch (error) {
       console.error("Translation error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleTTS = async () => {
+  const handleTextToSpeech = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("https://bhashini-python.onrender.com/tts", {
         source_language: sourceLang,
-        text: translatedText,
+        text: text,
       });
-      setBase64Audio(response.data.base64_string);
+      const audioBase64 = response.data.base64_string;
+      const audioBlob = new Blob([new Uint8Array(atob(audioBase64).split("").map(char => char.charCodeAt(0)))], { type: "audio/mp3" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
     } catch (error) {
-      console.error("Text-to-Speech error:", error);
+      console.error("TTS error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleASR = async () => {
-    if (!audioFile) return;
-
-    const formData = new FormData();
-    formData.append("audio", audioFile);
-
+    setLoading(true);
     try {
-      const response = await axios.post("https://bhashini-python.onrender.com/asr", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
+        source_language: sourceLang,
+        target_language: targetLang,
+        text: text,
       });
-      setAsrText(response.data.translated_text); // Assuming the ASR API returns translated text
+      setTranslatedText(response.data.translated_text);
     } catch (error) {
       console.error("ASR error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,7 +92,6 @@ export default function Home() {
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
       <div className="flex flex-col gap-2">
-        {/* Source Language Dropdown */}
         <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
           {languages.map((lang) => (
             <option key={lang.code} value={lang.code}>
@@ -95,7 +100,6 @@ export default function Home() {
           ))}
         </select>
 
-        {/* Target Language Dropdown */}
         <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2">
           {languages.map((lang) => (
             <option key={lang.code} value={lang.code}>
@@ -104,7 +108,6 @@ export default function Home() {
           ))}
         </select>
 
-        {/* Input Text */}
         <textarea
           className="border p-2"
           value={text}
@@ -112,38 +115,22 @@ export default function Home() {
           placeholder="Enter text to translate"
         />
 
-        {/* Translate Button */}
-        <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">Translate</button>
+        <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">
+          Translate
+        </button>
 
-        {/* Translated Text */}
+        <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
+          Text-to-Speech
+        </button>
+
+        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
+          Automatic Speech Recognition
+        </button>
+
+        {loading && <p>Loading...</p>}
+
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
         <p className="border p-2">{translatedText}</p>
-
-        {/* Text-to-Speech Button */}
-        <button onClick={handleTTS} className="bg-green-500 text-white p-2 rounded mt-4">Convert to Speech</button>
-        {base64Audio && (
-          <audio controls className="mt-4">
-            <source src={`data:audio/mp3;base64,${base64Audio}`} type="audio/mp3" />
-            Your browser does not support the audio element.
-          </audio>
-        )}
-
-        {/* Audio File Input for ASR */}
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
-          className="border p-2 mt-4"
-        />
-        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded mt-2">Convert Speech to Text</button>
-
-        {/* ASR Text */}
-        {asrText && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">ASR Result:</h2>
-            <p className="border p-2">{asrText}</p>
-          </div>
-        )}
       </div>
     </div>
   );
