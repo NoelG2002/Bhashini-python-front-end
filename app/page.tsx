@@ -3,135 +3,99 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function Home() {
-  const [text, setText] = useState<string>("");
-  const [translatedText, setTranslatedText] = useState<string>("");
-  const [sourceLang, setSourceLang] = useState<string>("hin_Deva");
-  const [targetLang, setTargetLang] = useState<string>("eng_Latn");
-  const [loading, setLoading] = useState<boolean>(false);
+const languageOptions = [
+  "Assamese", "Bengali", "Bodo", "Dogri", "English", "Gujarati", "Hindi", "Kannada",
+  "Kashmiri (Arabic)", "Kashmiri (Devanagari)", "Konkani", "Malayalam", "Marathi", "Maithili",
+  "Manipuri (Bengali)", "Manipuri (Meitei)", "Nepali", "Odia", "Punjabi", "Sanskrit", "Santali",
+  "Sindhi (Arabic)", "Sindhi (Devanagari)", "Tamil", "Telugu", "Urdu"
+];
 
-  const languages = [
-    { code: "asm_Beng", label: "Assamese" },
-    { code: "ben_Beng", label: "Bengali" },
-    { code: "brx_Deva", label: "Bodo" },
-    { code: "doi_Deva", label: "Dogri" },
-    { code: "eng_Latn", label: "English" },
-    { code: "gom_Deva", label: "Konkani" },
-    { code: "hin_Deva", label: "Hindi" },
-    { code: "kas_Arab", label: "Kashmiri (Arabic)" },
-    { code: "kas_Deva", label: "Kashmiri (Devanagari)" },
-    { code: "mai_Deva", label: "Maithili" },
-    { code: "mal_Mlym", label: "Malayalam" },
-    { code: "mar_Deva", label: "Marathi" },
-    { code: "mni_Beng", label: "Manipuri (Bengali)" },
-    { code: "mni_Mtei", label: "Manipuri (Meitei)" },
-    { code: "npi_Deva", label: "Nepali" },
-    { code: "ory_Orya", label: "Odia" },
-    { code: "pan_Guru", label: "Punjabi (Gurmukhi)" },
-    { code: "san_Deva", label: "Sanskrit" },
-    { code: "sat_Olck", label: "Santali" },
-    { code: "snd_Arab", label: "Sindhi (Arabic)" },
-    { code: "snd_Deva", label: "Sindhi (Devanagari)" },
-    { code: "tam_Taml", label: "Tamil" },
-    { code: "tel_Telu", label: "Telugu" },
-    { code: "urd_Arab", label: "Urdu (Arabic)" },
-  ];
+const Home = () => {
+  const [text, setText] = useState("");
+  const [sourceLanguage, setSourceLanguage] = useState("English");
+  const [targetLanguage, setTargetLanguage] = useState("Hindi");
+  const [translatedText, setTranslatedText] = useState("");
+  const [audio, setAudio] = useState("");
 
-  const handleTranslate = async () => {
-    setLoading(true);
+  const handleTranslation = async () => {
     try {
-      const response = await axios.post("https://bhashini-python.onrender.com/translate", {
-        source_language: sourceLang,
-        target_language: targetLang,
-        text: text,
+      const response = await axios.post("http://localhost:8000/translate", {
+        text,
+        source_language: sourceLanguage,
+        target_language: targetLanguage,
       });
       setTranslatedText(response.data.translated_text);
     } catch (error) {
-      console.error("Translation error:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error during translation:", error);
     }
   };
 
   const handleTextToSpeech = async () => {
-    setLoading(true);
     try {
-      const response = await axios.post("https://bhashini-python.onrender.com/tts", {
-        source_language: sourceLang,
-        text: text,
+      const response = await axios.post("http://localhost:8000/tts", {
+        text,
+        source_language: sourceLanguage,
+        target_language: targetLanguage,
       });
-      const audioBase64 = response.data.base64_string;
-      const audioBlob = new Blob([new Uint8Array(atob(audioBase64).split("").map(char => char.charCodeAt(0)))], { type: "audio/mp3" });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+      setAudio(response.data.audio_base64);
     } catch (error) {
-      console.error("TTS error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleASR = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
-        source_language: sourceLang,
-        target_language: targetLang,
-        text: text,
-      });
-      setTranslatedText(response.data.translated_text);
-    } catch (error) {
-      console.error("ASR error:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error during TTS:", error);
     }
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
-      <div className="flex flex-col gap-2">
-        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>
-              {lang.label}
-            </option>
-          ))}
-        </select>
-
-        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2">
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>
-              {lang.label}
-            </option>
-          ))}
-        </select>
-
-        <textarea
-          className="border p-2"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text to translate"
-        />
-
-        <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">
-          Translate
-        </button>
-
-        <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
-          Text-to-Speech
-        </button>
-
-        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
-          Automatic Speech Recognition
-        </button>
-
-        {loading && <p>Loading...</p>}
-
-        <h2 className="text-xl font-semibold mt-4">Translation:</h2>
-        <p className="border p-2">{translatedText}</p>
-      </div>
+    <div>
+      <h1>Language Translation</h1>
+      <textarea
+        placeholder="Enter text to translate"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <br />
+      <label>Source Language: </label>
+      <select
+        value={sourceLanguage}
+        onChange={(e) => setSourceLanguage(e.target.value)}
+      >
+        {languageOptions.map((lang) => (
+          <option key={lang} value={lang}>
+            {lang}
+          </option>
+        ))}
+      </select>
+      <br />
+      <label>Target Language: </label>
+      <select
+        value={targetLanguage}
+        onChange={(e) => setTargetLanguage(e.target.value)}
+      >
+        {languageOptions.map((lang) => (
+          <option key={lang} value={lang}>
+            {lang}
+          </option>
+        ))}
+      </select>
+      <br />
+      <button onClick={handleTranslation}>Translate</button>
+      <br />
+      <button onClick={handleTextToSpeech}>Text to Speech</button>
+      <br />
+      {translatedText && (
+        <div>
+          <h2>Translated Text:</h2>
+          <p>{translatedText}</p>
+        </div>
+      )}
+      {audio && (
+        <div>
+          <h2>Text to Speech (Audio):</h2>
+          <audio controls>
+            <source src={`data:audio/mp3;base64,${audio}`} type="audio/mp3" />
+          </audio>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default Home;
