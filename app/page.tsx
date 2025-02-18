@@ -80,39 +80,39 @@ export default function Home() {
 };
 
 
- const handleASR = async () => {
-  setLoading(true);
-  if (!audioFile) {
-    console.error("No audio file selected");
-    setLoading(false);
-    return;
-  }
+const handleASR = async () => {
+    setLoading(true);
+    if (!audioFile) {
+      console.error("No audio file selected");
+      setLoading(false);
+      return;
+    }
 
-  try {
-    // Convert audio file to base64
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      if (reader.result && typeof reader.result === "string") {
-        const base64Audio = reader.result.split(',')[1];  // Extract base64 part
+    try {
+      // Convert audio file to base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        if (reader.result && typeof reader.result === "string") {
+          const base64Audio = reader.result.split(',')[1];  // Extract base64 part
 
-        const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
-          source_language: sourceLang,
-          target_language: targetLang,
-          audio_base64: base64Audio // Send base64 audio
-        });
+          const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
+            source_language: sourceLang,
+            target_language: targetLang,
+            audio_base64: base64Audio // Send base64 audio
+          });
 
-        setTranslatedText(response.data.translated_text);
-      } else {
-        console.error("Failed to read audio file");
-      }
-    };
-    reader.readAsDataURL(audioFile); // Read the audio file as base64
-  } catch (error) {
-    console.error("ASR error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+          setTranslatedText(response.data.translated_text); // Set the translated text
+        } else {
+          console.error("Failed to read audio file");
+        }
+      };
+      reader.readAsDataURL(audioFile); // Read the audio file as base64
+    } catch (error) {
+      console.error("ASR error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -146,6 +146,8 @@ export default function Home() {
         <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
           Text-to-Speech
         </button>
+
+        
         {audioUrl && (
   <a href={audioUrl} download="output_audio.wav" className="bg-purple-500 text-white p-2 rounded p-2 mt-2">
     Download Audio
@@ -153,12 +155,14 @@ export default function Home() {
 )}
 
 
-        <input
-          type="file"
-          onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
-          accept="audio/*"
-          className="border p-2"
-        />
+       <input
+        type="file"
+        onChange={(e) => { setAudioFile(e.target.files?.[0] ?? null); }}
+        accept="audio/*"
+        className="border p-2"
+      />
+
+        
         <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
           Automatic Speech Recognition
         </button>
