@@ -130,6 +130,11 @@ export default function Home() {
         <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
           Text-to-Speech
         </button>
+        {audioUrl && (
+  <a href={audioUrl} download="output_audio.wav" className="bg-purple-500 text-white p-2 rounded">
+    Download Audio
+  </a>
+)}
 
         <input
           type="file"
