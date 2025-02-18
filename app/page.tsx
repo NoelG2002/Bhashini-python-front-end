@@ -92,7 +92,7 @@ export default function Home() {
     // Convert audio file to base64
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const audioBase64 = reader.result?.toString().split(',')[1]; // Extract base64 string
+      const base64Audio = reader.result.split(',')[1];  // Extract base64 part
 
       const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
         source_language: sourceLang,
