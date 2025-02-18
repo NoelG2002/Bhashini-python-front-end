@@ -80,7 +80,7 @@ export default function Home() {
 };
 
 
-  const handleASR = async () => {
+ const handleASR = async () => {
   setLoading(true);
   if (!audioFile) {
     console.error("No audio file selected");
@@ -92,15 +92,19 @@ export default function Home() {
     // Convert audio file to base64
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64Audio = reader.result.split(',')[1];  // Extract base64 part
+      if (reader.result && typeof reader.result === "string") {
+        const base64Audio = reader.result.split(',')[1];  // Extract base64 part
 
-      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
-        source_language: sourceLang,
-        target_language: targetLang,
-        audio_base64: base64Audio // Send base64 audio
-      });
+        const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
+          source_language: sourceLang,
+          target_language: targetLang,
+          audio_base64: base64Audio // Send base64 audio
+        });
 
-      setTranslatedText(response.data.translated_text);
+        setTranslatedText(response.data.translated_text);
+      } else {
+        console.error("Failed to read audio file");
+      }
     };
     reader.readAsDataURL(audioFile); // Read the audio file as base64
   } catch (error) {
@@ -109,6 +113,7 @@ export default function Home() {
     setLoading(false);
   }
 };
+
 
 
   return (
