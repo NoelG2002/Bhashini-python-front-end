@@ -97,7 +97,7 @@ export default function Home() {
       const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
         source_language: sourceLang,
         target_language: targetLang,
-        audio_base64: audioBase64, // Send base64 audio
+        audio_base64: base64Audio // Send base64 audio
       });
 
       setTranslatedText(response.data.translated_text);
