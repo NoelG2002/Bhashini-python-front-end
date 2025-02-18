@@ -163,7 +163,7 @@ export default function Home() {
 
         
         <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
-          Automatic Speech Recognition
+         Speech to Text Translation 
         </button>
 
         {loading && <p>Loading...</p>}
