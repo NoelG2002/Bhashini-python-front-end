@@ -80,7 +80,7 @@ export default function Home() {
 };
 
 
-  const handleASR = async () => {
+   const handleASR = async () => {
     setLoading(true);
     if (!audioFile) {
       console.error("No audio file selected");
@@ -89,30 +89,20 @@ export default function Home() {
     }
 
     try {
-      // Convert audio file to base64
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        if (reader.result && typeof reader.result === "string") {
-          const base64Audio = reader.result.split(',')[1];  // Extract base64 part
+      const formData = new FormData();
+      formData.append("audio_file", audioFile); // Append the audio file directly
 
-          // Log the base64Audio for debugging
-          console.log("Base64 Audio:", base64Audio);
+      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the content type is multipart/form-data
+        },
+      });
 
-          try {
-            const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
-              source_language: sourceLang,
-              target_language: targetLang,
-              audio_base64: base64Audio // Send base64 audio
-            });
-            setTranslatedText(response.data.translated_text); // Set the translated text
-          } catch (error) {
-            console.error("Error during ASR request:", error);
-          }
-        } else {
-          console.error("Failed to read audio file");
-        }
-      };
-      reader.readAsDataURL(audioFile); // Read the audio file as base64
+      if (response.data.translated_text) {
+        setTranslatedText(response.data.translated_text); // Set the translated text
+      } else {
+        console.error("Error: No translated text returned from ASR");
+      }
     } catch (error) {
       console.error("ASR error:", error);
     } finally {
@@ -162,11 +152,11 @@ export default function Home() {
 
 
        <input
-        type="file"
-        onChange={(e) => { setAudioFile(e.target.files?.[0] ?? null); }}
-        accept="audio/*"
-        className="border p-2"
-      />
+          type="file"
+          onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
+          accept="audio/*"
+          className="border p-2"
+        />
 
         
         <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
