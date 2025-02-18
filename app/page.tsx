@@ -57,9 +57,9 @@ export default function Home() {
   setLoading(true);
   try {
     const response = await axios.post("https://bhashini-python.onrender.com/tts", {
-      text: text,
       source_language: sourceLang,
       target_language: targetLang,
+      text: text,
     });
 
     const audioBase64 = response.data.audio_base64;
