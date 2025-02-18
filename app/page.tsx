@@ -81,31 +81,35 @@ export default function Home() {
 
 
   const handleASR = async () => {
-    setLoading(true);
-    if (!audioFile) {
-      console.error("No audio file selected");
-      setLoading(false);
-      return;
-    }
+  setLoading(true);
+  if (!audioFile) {
+    console.error("No audio file selected");
+    setLoading(false);
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("file", audioFile);
-    formData.append("source_language", sourceLang);
-    formData.append("target_language", targetLang);
+  try {
+    // Convert audio file to base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const audioBase64 = reader.result?.toString().split(',')[1]; // Extract base64 string
 
-    try {
-      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", {
+        source_language: sourceLang,
+        target_language: targetLang,
+        audio_base64: audioBase64, // Send base64 audio
       });
+
       setTranslatedText(response.data.translated_text);
-    } catch (error) {
-      console.error("ASR error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    reader.readAsDataURL(audioFile); // Read the audio file as base64
+  } catch (error) {
+    console.error("ASR error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="p-6 max-w-lg mx-auto">
