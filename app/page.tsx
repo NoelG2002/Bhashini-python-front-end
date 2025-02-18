@@ -81,34 +81,37 @@ export default function Home() {
 
 
    const handleASR = async () => {
-    setLoading(true);
-    if (!audioFile) {
-      console.error("No audio file selected");
-      setLoading(false);
-      return;
+  setLoading(true);
+  if (!audioFile) {
+    console.error("No audio file selected");
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("audio_file", audioFile); // Append the audio file directly
+    formData.append("source_language", sourceLang); // Append source language
+    formData.append("target_language", targetLang); // Append target language
+
+    const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Ensure the content type is multipart/form-data
+      },
+    });
+
+    if (response.data.translated_text) {
+      setTranslatedText(response.data.translated_text); // Set the translated text
+    } else {
+      console.error("Error: No translated text returned from ASR");
     }
+  } catch (error) {
+    console.error("ASR error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      const formData = new FormData();
-      formData.append("audio_file", audioFile); // Append the audio file directly
-
-      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure the content type is multipart/form-data
-        },
-      });
-
-      if (response.data.translated_text) {
-        setTranslatedText(response.data.translated_text); // Set the translated text
-      } else {
-        console.error("Error: No translated text returned from ASR");
-      }
-    } catch (error) {
-      console.error("ASR error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
 
 
