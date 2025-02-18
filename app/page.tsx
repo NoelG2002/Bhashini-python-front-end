@@ -10,6 +10,8 @@ export default function Home() {
   const [targetLang, setTargetLang] = useState("en");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
 
   const languages = [
     { code: "as", label: "Assamese" },
@@ -52,26 +54,31 @@ export default function Home() {
   };
 
   const handleTextToSpeech = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post("https://bhashini-python.onrender.com/tts", {
-        text: text,
-        source_language: sourceLang,
-        target_language: targetLang,
-      });
-      const audioBase64 = response.data.audio_base64;
-      const audioBlob = new Blob([
-        new Uint8Array(atob(audioBase64).split("").map((char) => char.charCodeAt(0))),
-      ], { type: "audio/wav" });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
-    } catch (error) {
-      console.error("TTS error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const response = await axios.post("https://bhashini-python.onrender.com/tts", {
+      text: text,
+      source_language: sourceLang,
+      target_language: targetLang,
+    });
+
+    const audioBase64 = response.data.audio_base64;
+    const audioBlob = new Blob([
+      new Uint8Array(atob(audioBase64).split("").map((char) => char.charCodeAt(0))),
+    ], { type: "audio/wav" });
+
+    const newAudioUrl = URL.createObjectURL(audioBlob);
+    setAudioUrl(newAudioUrl); // Store the URL
+
+    const audio = new Audio(newAudioUrl);
+    audio.play();
+  } catch (error) {
+    console.error("TTS error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleASR = async () => {
     setLoading(true);
@@ -131,10 +138,11 @@ export default function Home() {
           Text-to-Speech
         </button>
         {audioUrl && (
-  <a href={audioUrl} download="output_audio.wav" className="bg-purple-500 text-white p-2 rounded">
+  <a href={audioUrl} download="output_audio.wav" className="bg-purple-500 text-white p-2 rounded p-2 mt-2">
     Download Audio
   </a>
 )}
+
 
         <input
           type="file"
