@@ -3,6 +3,25 @@
 import { useState } from "react";
 import axios from "axios";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+
+export default function ThemeToggle() {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    setTheme(storedTheme);
+    document.documentElement.classList.toggle("dark", storedTheme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
+
+
 
 
 export default function Home() {
@@ -126,6 +145,12 @@ export default function Home() {
         </Head>
         
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
+      <button
+      onClick={toggleTheme}
+      className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded-md"
+    >
+      {theme === "light" ? "Dark Mode" : "Light Mode"}
+    </button>
       <div className="flex flex-col gap-2">
         <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
           {languages.map((lang) => (
