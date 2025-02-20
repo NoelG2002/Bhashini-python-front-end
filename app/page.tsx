@@ -160,7 +160,7 @@ export default function Home() {
 </select>
         
         <textarea
-          className="border p-2"
+          className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Enter text to translate"
@@ -194,7 +194,7 @@ export default function Home() {
         {loading && <p>Loading...</p>}
 
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
-        <p className="border p-2">{translatedText}</p>
+        <p className="className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"">{translatedText}</p>
       </div>
     </div>
   );
