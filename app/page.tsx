@@ -194,7 +194,7 @@ export default function Home() {
         {loading && <p>Loading...</p>}
 
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
-        <p className="className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"">{translatedText}</p>
+        <p className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">{translatedText}</p>
       </div>
     </div>
   );
