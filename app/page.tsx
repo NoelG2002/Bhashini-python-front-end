@@ -4,6 +4,9 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function Home() {
+    <Head>
+        <title>Bhashini - Translate </title>
+      </Head>
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [sourceLang, setSourceLang] = useState("hi");
