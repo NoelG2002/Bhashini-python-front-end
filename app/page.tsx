@@ -32,8 +32,8 @@ const ThemeToggle = () => {
 export default function Home() {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
-  const [sourceLang, setSourceLang] = useState("hi");
-  const [targetLang, setTargetLang] = useState("en");
+  const [sourceLang, setSourceLang] = useState("en");
+  const [targetLang, setTargetLang] = useState("hi");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
