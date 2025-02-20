@@ -149,18 +149,25 @@ export default function Home() {
       <ThemeToggle />
 
       <div className="flex flex-col gap-2 mt-4">
-        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>{lang.label}</option>
-          ))}
-        </select>
+        <select
+  value={sourceLang}
+  onChange={(e) => setSourceLang(e.target.value)}
+  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
+>
+  {languages.map((lang) => (
+    <option key={lang.code} value={lang.code}>{lang.label}</option>
+  ))}
+</select>
 
-        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2">
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>{lang.label}</option>
-          ))}
-        </select>
-
+<select
+  value={targetLang}
+  onChange={(e) => setTargetLang(e.target.value)}
+  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
+>
+  {languages.map((lang) => (
+    <option key={lang.code} value={lang.code}>{lang.label}</option>
+  ))}
+</select>
         <textarea
           className="border p-2"
           value={text}
