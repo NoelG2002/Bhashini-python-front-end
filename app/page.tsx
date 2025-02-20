@@ -147,27 +147,32 @@ export default function Home() {
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
 
       <ThemeToggle />
+      
+      <div className="absolute top-4 right-4">
+        <button onClick={toggleTheme} className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded-md shadow-md">
+        {theme === "light" ? "Dark Mode" : "Light Mode"}
+        </button>
+      </div>
 
       <div className="flex flex-col gap-2 mt-4">
         <select
   value={sourceLang}
   onChange={(e) => setSourceLang(e.target.value)}
-  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
->
+  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">
   {languages.map((lang) => (
     <option key={lang.code} value={lang.code}>{lang.label}</option>
   ))}
-</select>
+        </select>
 
 <select
   value={targetLang}
   onChange={(e) => setTargetLang(e.target.value)}
-  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
->
+  className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">
   {languages.map((lang) => (
     <option key={lang.code} value={lang.code}>{lang.label}</option>
   ))}
 </select>
+        
         <textarea
           className="border p-2"
           value={text}
