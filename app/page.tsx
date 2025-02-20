@@ -6,9 +6,7 @@ import Head from "next/head";
 
 
 export default function Home() {
-    <Head>
-        <title>Bhashini - Translate </title>
-      </Head>
+
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [sourceLang, setSourceLang] = useState("hi");
@@ -122,6 +120,11 @@ export default function Home() {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
+         
+        <Head>
+        <title>Bhashini - Translate</title>
+        </Head>
+        
       <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
       <div className="flex flex-col gap-2">
         <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2">
