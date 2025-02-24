@@ -21,11 +21,12 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="absolute top-4 right-4">
-  <button onClick={toggleTheme} className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded-md shadow-md">
-    {theme === "light" ? "Dark Mode" : "Light Mode"}
-  </button>
-</div>
+    <button
+      onClick={toggleTheme}
+      className="fixed top-4 right-4 px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded-md shadow-md hover:bg-gray-400 dark:hover:bg-gray-600 transition"
+    >
+      {theme === "light" ? "Dark Mode" : "Light Mode"}
+    </button>
   );
 };
 
@@ -39,24 +40,9 @@ export default function Home() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const languages = [
-    { code: "as", label: "Assamese" },
-    { code: "bn", label: "Bengali" },
-    { code: "brx", label: "Bodo" },
-    { code: "doi", label: "Dogri" },
     { code: "en", label: "English" },
-    { code: "gom", label: "Konkani" },
     { code: "hi", label: "Hindi" },
-    { code: "ks", label: "Kashmiri" },
-    { code: "mai", label: "Maithili" },
     { code: "ml", label: "Malayalam" },
-    { code: "mr", label: "Marathi" },
-    { code: "mni", label: "Manipuri" },
-    { code: "ne", label: "Nepali" },
-    { code: "or", label: "Odia" },
-    { code: "pa", label: "Punjabi" },
-    { code: "sa", label: "Sanskrit" },
-    { code: "sat", label: "Santali" },
-    { code: "sd", label: "Sindhi" },
     { code: "ta", label: "Tamil" },
     { code: "te", label: "Telugu" },
     { code: "ur", label: "Urdu" },
@@ -88,16 +74,13 @@ export default function Home() {
       });
 
       const audioBase64 = response.data.audio_base64;
-      const audioBlob = new Blob(
-        [new Uint8Array(atob(audioBase64).split("").map((char) => char.charCodeAt(0)))],
-        { type: "audio/wav" }
-      );
-
+      const audioBlob = new Blob([
+        new Uint8Array(atob(audioBase64).split("").map((char) => char.charCodeAt(0))),
+      ], { type: "audio/wav" });
+      
       const newAudioUrl = URL.createObjectURL(audioBlob);
       setAudioUrl(newAudioUrl);
-
-      const audio = new Audio(newAudioUrl);
-      audio.play();
+      new Audio(newAudioUrl).play();
     } catch (error) {
       console.error("TTS error:", error);
     } finally {
@@ -120,16 +103,10 @@ export default function Home() {
       formData.append("target_language", targetLang);
 
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/asr_nmt", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (response.data.translated_text) {
-        setTranslatedText(response.data.translated_text);
-      } else {
-        console.error("Error: No translated text returned from ASR");
-      }
+      setTranslatedText(response.data.translated_text || "Error: No translated text returned from ASR");
     } catch (error) {
       console.error("ASR error:", error);
     } finally {
@@ -138,63 +115,37 @@ export default function Home() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       <Head>
         <title>Bhashini - Translate</title>
       </Head>
 
-      <h1 className="text-2xl font-bold mb-4">Bhashini Translator</h1>
-
+      <h1 className="text-3xl font-bold mb-6">Bhashini Translator</h1>
       <ThemeToggle />
-      <div className="flex flex-col gap-2 mt-4">
-        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">
-  {languages.map((lang) => (
-    <option key={lang.code} value={lang.code}>{lang.label}</option>
-  ))}
-        </select>
 
-<select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">
-  {languages.map((lang) => (
-    <option key={lang.code} value={lang.code}>{lang.label}</option>
-  ))}
-</select>
-        
-        <textarea
-          className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text to translate"
-        />
+      <div className="w-full max-w-md space-y-4">
+        <div className="flex space-x-2">
+          <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded bg-white dark:bg-gray-700 border">
+            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+          </select>
+          <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded bg-white dark:bg-gray-700 border">
+            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+          </select>
+        </div>
 
-        <button onClick={handleTranslate} className="bg-blue-500 text-white p-2 rounded">
-          Translate
-        </button>
+        <textarea className="w-full p-2 border rounded bg-white dark:bg-gray-700" value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" />
 
-        <button onClick={handleTextToSpeech} className="bg-green-500 text-white p-2 rounded">
-          Text-to-Speech
-        </button>
+        <button onClick={handleTranslate} className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Translate</button>
+        <button onClick={handleTextToSpeech} className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Text-to-Speech</button>
 
-        {audioUrl && (
-          <a href={audioUrl} download="output_audio.wav" className="bg-purple-500 text-white p-2 rounded mt-2">
-            Download Audio
-          </a>
-        )}
+        {audioUrl && <audio controls src={audioUrl} className="w-full" />}
 
-        <input
-          type="file"
-          onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
-          accept="audio/*"
-          className="border p-2"
-        />
+        <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded" />
+        <button onClick={handleASR} className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Speech to Text</button>
 
-        <button onClick={handleASR} className="bg-yellow-500 text-white p-2 rounded">
-          Speech to Text Translation
-        </button>
-
-        {loading && <p>Loading...</p>}
-
+        {loading && <p className="text-center">Loading...</p>}
         <h2 className="text-xl font-semibold mt-4">Translation:</h2>
-        <p className="border p-2 bg-white text-black dark:bg-gray-800 dark:text-white">{translatedText}</p>
+        <p className="p-2 border bg-white dark:bg-gray-700 rounded">{translatedText}</p>
       </div>
     </div>
   );
