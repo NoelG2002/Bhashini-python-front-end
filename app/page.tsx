@@ -129,39 +129,57 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <Head>
-        <title>Bhashini - Translate</title>
-      </Head>
+ return (
+  <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <Head>
+      <title>Bhashini - Translate</title>
+    </Head>
 
-      <h1 className="text-3xl font-bold mb-6">Bhashini Translator</h1>
-      <ThemeToggle />
+    <h1 className="text-3xl font-bold mb-4 text-center">Bhashini Translator</h1>
+    <ThemeToggle />
 
-      <div className="w-full max-w-md space-y-4">
-        <div className="flex space-x-2">
-          <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded bg-white dark:bg-gray-700 border">
-            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-          </select>
-          <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded bg-white dark:bg-gray-700 border">
-            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-          </select>
-        </div>
+    <div className="w-full max-w-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 space-y-4">
+      <div className="flex space-x-2">
+        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} 
+          className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} 
+          className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
+      </div>
 
-        <textarea className="w-full p-2 border rounded bg-white dark:bg-gray-700" value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" />
+      <textarea className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500" 
+        value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" rows={3} />
 
-        <button onClick={handleTranslate} className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Translate</button>
-        <button onClick={handleTextToSpeech} className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Text-to-Speech</button>
+      {/* Buttons in Horizontal Layout */}
+      <div className="flex space-x-2">
+        <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
+          Translate
+        </button>
+        <button onClick={handleTextToSpeech} className="w-1/3 bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition">
+          Text-to-Speech
+        </button>
+        <button onClick={handleASR} className="w-1/3 bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition">
+          Speech to Text
+        </button>
+      </div>
 
-        {audioUrl && <audio controls src={audioUrl} className="w-full" />}
+      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
 
-        <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded" />
-        <button onClick={handleASR} className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Speech to Text</button>
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Upload an Audio File
+        <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*"
+          className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
+      </label>
 
-        {loading && <p className="text-center">Loading...</p>}
-        <h2 className="text-xl font-semibold mt-4">Translation:</h2>
-        <p className="p-2 border bg-white dark:bg-gray-700 rounded">{translatedText}</p>
+      {loading && <p className="text-center text-blue-500">Processing...</p>}
+
+      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Translation:</h2>
+        <p className="mt-2 text-gray-900 dark:text-gray-200">{translatedText}</p>
       </div>
     </div>
-  );
-}
+  </div>
+);
