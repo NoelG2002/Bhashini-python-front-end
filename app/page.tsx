@@ -129,7 +129,7 @@ export default function Home() {
     }
   };
 
- return (
+return (
   <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
     <Head>
       <title>Bhashini - Translate</title>
@@ -140,12 +140,10 @@ export default function Home() {
 
     <div className="w-full max-w-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 space-y-4">
       <div className="flex space-x-2">
-        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} 
-          className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
           {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
         </select>
-        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} 
-          className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
           {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
         </select>
       </div>
@@ -153,7 +151,6 @@ export default function Home() {
       <textarea className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500" 
         value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" rows={3} />
 
-      {/* Buttons in Horizontal Layout */}
       <div className="flex space-x-2">
         <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
           Translate
@@ -168,11 +165,7 @@ export default function Home() {
 
       {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
 
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Upload an Audio File
-        <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*"
-          className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
-      </label>
+      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
 
       {loading && <p className="text-center text-blue-500">Processing...</p>}
 
