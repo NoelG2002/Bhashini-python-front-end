@@ -177,7 +177,7 @@ export default function Home() {
             className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
             disabled={translating}
           >
-            {translating ? "Translating..." : "Translate the text"}
+            {translating ? "Translating..." : "Translate text"}
           </button>
         </div>
 
