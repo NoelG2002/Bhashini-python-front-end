@@ -1,22 +1,23 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
 
-const ThemeToggle = ({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) => {
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    document.documentElement.classList.toggle("dark", theme === "dark");
+const ThemeToggle = () => {
+  const [theme, setTheme] = useState("light");
 
-    // Change background color based on theme
-    document.body.style.backgroundColor = theme === "dark" ? "#1a202c" : "#f3f4f6"; // Tailwind dark:bg-gray-900 and light:bg-gray-100
-  }, [theme]);
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    setTheme(storedTheme);
+    document.documentElement.classList.toggle("dark", storedTheme === "dark");
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
   return (
@@ -29,63 +30,57 @@ const ThemeToggle = ({ theme, setTheme }: { theme: string; setTheme: (theme: str
   );
 };
 
-
 export default function Home() {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [sourceLang, setSourceLang] = useState("en");
   const [targetLang, setTargetLang] = useState("hi");
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") || "light";
-    setTheme(storedTheme);
-  }, []);
-
-
-  // Separate loading states
-  const [translating, setTranslating] = useState(false);
-  const [ttsLoading, setTtsLoading] = useState(false);
-  const [asrLoading, setAsrLoading] = useState(false);
 
   const languages = [
     { code: "as", label: "Assamese" },
     { code: "bn", label: "Bengali" },
+    { code: "brx", label: "Bodo" },
+    { code: "doi", label: "Dogri" },
     { code: "en", label: "English" },
+    { code: "gom", label: "Konkani" },
     { code: "hi", label: "Hindi" },
+    { code: "ks", label: "Kashmiri" },
+    { code: "mai", label: "Maithili" },
     { code: "ml", label: "Malayalam" },
     { code: "mr", label: "Marathi" },
+    { code: "mni", label: "Manipuri" },
     { code: "ne", label: "Nepali" },
     { code: "or", label: "Odia" },
     { code: "pa", label: "Punjabi" },
+    { code: "sa", label: "Sanskrit" },
+    { code: "sat", label: "Santali" },
+    { code: "sd", label: "Sindhi" },
     { code: "ta", label: "Tamil" },
     { code: "te", label: "Telugu" },
     { code: "ur", label: "Urdu" },
   ];
 
   const handleTranslate = async () => {
+    setLoading(true);
     try {
-      setTranslating(true);
-      setTranslatedText(""); // Reset previous translation before new request
-
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/translate", {
         source_language: sourceLang,
         target_language: targetLang,
         text: text,
       });
-
       setTranslatedText(response.data.translated_text);
     } catch (error) {
       console.error("Translation error:", error);
     } finally {
-      setTranslating(false);
+      setLoading(false);
     }
   };
 
- const handleTextToSpeech = async () => {
-    setTtsLoading(true);
+  const handleTextToSpeech = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/tts", {
         source_language: sourceLang,
@@ -104,15 +99,15 @@ export default function Home() {
     } catch (error) {
       console.error("TTS error:", error);
     } finally {
-      setTtsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleASR = async () => {
-    setAsrLoading(true);
+    setLoading(true);
     if (!audioFile) {
       console.error("No audio file selected");
-      setAsrLoading(false);
+      setLoading(false);
       return;
     }
 
@@ -130,106 +125,55 @@ export default function Home() {
     } catch (error) {
       console.error("ASR error:", error);
     } finally {
-      setAsrLoading(false);
+      setLoading(false);
     }
   };
 
+return (
+  <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <Head>
+      <title>Bhashini - Translate</title>
+    </Head>
 
-  return (
-<div
-  className={`min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 ${
-    theme === "dark"
-      ? "bg-gradient-to-br from-green-900 via-teal-800 to-green-700 text-white"
-      : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
-  }`}>
-      <Head>
-        <title>AgriVaani</title>
-      </Head>
+    <h1 className="text-3xl font-bold mb-4 text-center">Bhashini Translator</h1>
+    <ThemeToggle />
 
-   {/* Logo at Top Left */}
-      <div className="fixed top-2 left-2">
-        <img src="/logo with iso.png" alt="Logo" className="h-10" />
-        <p className="text-sm text-gray-600 mt-2">Powered by <span className="font-semibold">BHASHINI</span></p>
+    <div className="w-full max-w-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 space-y-4">
+      <div className="flex space-x-2">
+        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
       </div>
 
-      <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
-      <ThemeToggle theme={theme} setTheme={setTheme} />
+      <textarea className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500" 
+        value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" rows={3} />
 
-      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
-        {/* Left Section: Input */}
-        <div className="w-1/2 flex flex-col space-y-4">
-          <div className="flex space-x-2">
-            <select
-              value={sourceLang}
-              onChange={(e) => setSourceLang(e.target.value)}
-              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
-            >
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
-            >
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <textarea
-            className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter text to translate"
-            rows={4}
-          />
-
-          <button
-            onClick={handleTranslate}
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
-            disabled={translating}
-          >
-            {translating ? "Translating..." : "Translate text"}
-          </button>
-          {/* TTS Button */}
-          <button
-            onClick={handleTextToSpeech}
-            className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
-            disabled={ttsLoading}
-          >
-            {ttsLoading ? "Generating..." : "Generate Audio "}
-          </button>
-        </div>
-
-        {/* Right Section: Translated Output */}
-        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h2 className="text-lg font-semibold">Translation:</h2>
-          <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
-
-          
-      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
-        </div>
-      </div>
-
-      {/* ASR Section */}
-      <div className="mt-6 w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-        <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
-      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
-        <button
-          onClick={handleASR}
-          className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700"
-          disabled={asrLoading || !audioFile}
-        >
-          {asrLoading ? "Processing..." : "Transcribe Audio"}
+      <div className="flex space-x-2">
+        <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
+          Translate
+        </button>
+        <button onClick={handleTextToSpeech} className="w-1/3 bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition">
+          Text-to-Speech
+        </button>
+        <button onClick={handleASR} className="w-1/3 bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition">
+          Speech to Text
         </button>
       </div>
+
+      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
+
+      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
+
+      {loading && <p className="text-center text-blue-500">Processing...</p>}
+
+      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Translation:</h2>
+        <p className="mt-2 text-gray-900 dark:text-gray-200">{translatedText}</p>
+      </div>
     </div>
-  );
+  </div>
+);
 }
