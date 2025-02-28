@@ -135,7 +135,12 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center transition ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"} p-6`}>
+<div
+  className={`min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 ${
+    theme === "dark"
+      ? "bg-gradient-to-br from-green-900 via-teal-800 to-green-700 text-white"
+      : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
+  }`}>
       <Head>
         <title>AgriVaani</title>
       </Head>
