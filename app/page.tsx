@@ -161,7 +161,7 @@ export default function Home() {
     className="h-12 w-42 bg-white p-0.5 rounded"
   />
   <p className="text-sm mt-2 text-black dark:text-white">
-    Powered by <span className="font-semibold">BHASHINI</span>
+    Powered by <span className="font-semibold">BHASHINI API</span>
   </p>
 </div>
 
