@@ -146,7 +146,7 @@ export default function Home() {
       </Head>
 
    {/* Logo at Top Left */}
-      <div className="fixed top-4 left-4">
+      <div className="fixed top-2 left-2">
         <img src="/logo with iso.png" alt="Logo" className="h-10" />
         <p className="text-sm text-gray-600 mt-2">Powered by <span className="font-semibold">BHASHINI</span></p>
       </div>
