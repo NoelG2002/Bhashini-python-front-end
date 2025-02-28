@@ -143,6 +143,8 @@ export default function Home() {
   };
 
   return (
+     <div className="h-screen bg-cover bg-center" style={{ backgroundImage: "url('/background.jpg')" }}>
+    </div>
 <div className="min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500">
       <Head>
         <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
