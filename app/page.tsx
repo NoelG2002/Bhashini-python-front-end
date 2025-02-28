@@ -168,8 +168,8 @@ export default function Home() {
 
 
 <h1 className="text-3xl font-bold mb-4" style={{ fontFamily: "'Restore W00 Black'" }}>
-        <span className="text-green-600">Agri</span>
-        <span className="text-red-600">Vaani</span>
+        <span className="text-green-600">AGRI</span>
+        <span className="text-red-600">VAANI</span>
 </h1>
   
   <ThemeToggle theme={theme} setTheme={setTheme} />
