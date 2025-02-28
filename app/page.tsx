@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
 
-const ThemeToggle = () => {
-
+const ThemeToggle = ({ theme, setTheme }) => {
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || "light";
     setTheme(storedTheme);
