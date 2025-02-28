@@ -1,16 +1,18 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
+import { useState, useEffect, useCallback } from "react";
 
 const ThemeToggle = ({ theme, setTheme }) => {
+  const memoizedSetTheme = useCallback(setTheme, []);
+
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || "light";
-    setTheme(storedTheme);
+    memoizedSetTheme(storedTheme);
     document.documentElement.classList.toggle("dark", storedTheme === "dark");
-  }, []);
+  }, [memoizedSetTheme]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
