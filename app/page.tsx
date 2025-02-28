@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -51,20 +48,30 @@ export default function Home() {
   const [ttsLoading, setTtsLoading] = useState(false);
   const [asrLoading, setAsrLoading] = useState(false);
 
-  const languages = [
+   const languages = [
     { code: "as", label: "Assamese" },
     { code: "bn", label: "Bengali" },
+    { code: "brx", label: "Bodo" },
+    { code: "doi", label: "Dogri" },
     { code: "en", label: "English" },
+    { code: "gom", label: "Konkani" },
     { code: "hi", label: "Hindi" },
+    { code: "ks", label: "Kashmiri" },
+    { code: "mai", label: "Maithili" },
     { code: "ml", label: "Malayalam" },
     { code: "mr", label: "Marathi" },
+    { code: "mni", label: "Manipuri" },
     { code: "ne", label: "Nepali" },
     { code: "or", label: "Odia" },
     { code: "pa", label: "Punjabi" },
+    { code: "sa", label: "Sanskrit" },
+    { code: "sat", label: "Santali" },
+    { code: "sd", label: "Sindhi" },
     { code: "ta", label: "Tamil" },
     { code: "te", label: "Telugu" },
     { code: "ur", label: "Urdu" },
   ];
+
 
   const handleTranslate = async () => {
     try {
