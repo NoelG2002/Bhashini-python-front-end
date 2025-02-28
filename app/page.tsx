@@ -197,13 +197,6 @@ export default function Home() {
           >
             {translating ? "Translating..." : "Translate text"}
           </button>
-        </div>
-
-        {/* Right Section: Translated Output */}
-        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h2 className="text-lg font-semibold">Translation:</h2>
-          <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
-
           {/* TTS Button */}
           <button
             onClick={handleTextToSpeech}
@@ -212,6 +205,14 @@ export default function Home() {
           >
             {ttsLoading ? "Generating..." : "Generate Audio "}
           </button>
+        </div>
+
+        {/* Right Section: Translated Output */}
+        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+          <h2 className="text-lg font-semibold">Translation:</h2>
+          <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
+
+          
       {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
         </div>
       </div>
