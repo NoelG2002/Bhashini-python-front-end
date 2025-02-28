@@ -221,12 +221,7 @@ export default function Home() {
       {/* ASR Section */}
       <div className="mt-6 w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
         <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700"
-        />
+      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
         <button
           onClick={handleASR}
           className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700"
