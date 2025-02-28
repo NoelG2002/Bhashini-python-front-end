@@ -165,8 +165,8 @@ export default function Home() {
 <h1 
   className="text-3xl font-bold mb-4" 
   style={{ 
-    fontFamily: "'Restore W00 Black'", 
-    fontWeight: 2000, /* Increases font thickness */
+    fontFamily: "'CamporaClassicHeavy'", 
+    fontWeight: 900, /* Increases font thickness */
     letterSpacing: "-2.5px" /* Reduces space between characters */
   }}>
   <span className="text-green-600">AGRI</span>
