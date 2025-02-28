@@ -4,15 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
 
-
-export default function Home() {
-  const [text, setText] = useState("");
-  const [translatedText, setTranslatedText] = useState("");
-  const [sourceLang, setSourceLang] = useState("en");
-  const [targetLang, setTargetLang] = useState("hi");
-  const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const ThemeToggle = () => {
+const ThemeToggle = () => {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -38,6 +30,13 @@ export default function Home() {
   );
 };
 
+export default function Home() {
+  const [text, setText] = useState("");
+  const [translatedText, setTranslatedText] = useState("");
+  const [sourceLang, setSourceLang] = useState("en");
+  const [targetLang, setTargetLang] = useState("hi");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   // Separate loading states
   const [translating, setTranslating] = useState(false);
@@ -129,11 +128,8 @@ export default function Home() {
   };
 
   return (
-<div className={`min-h-screen flex flex-col items-center justify-center transition-all duration-500 ${
-  theme === "dark"
-    ? "bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white"
-    : "bg-gradient-to-r from-blue-100 via-white to-gray-100 text-gray-900"
-}`}>      <Head>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+      <Head>
         <title>AgriVaani</title>
       </Head>
 
