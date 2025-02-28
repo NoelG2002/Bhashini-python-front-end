@@ -144,11 +144,7 @@ export default function Home() {
 
   return (
 <div
-  className={`min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 ${
-    theme === "dark"
-      ? "bg-gradient-to-br from-green-900 via-teal-800 to-green-700 text-white"
-      : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
-  }`}>
+  className={`min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 }>
       <Head>
         <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
         <title>AgriVaani</title>
