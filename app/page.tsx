@@ -155,9 +155,16 @@ export default function Home() {
 
    {/* Logo at Top Left */}
       <div className="fixed top-2 left-2">
-        <img src="/logo with iso.png" alt="Logo" className="h-10" />
-        <p className="text-sm text-gray-600 mt-2">Powered by <span className="font-semibold">BHASHINI</span></p>
-      </div>
+  <img 
+    src="/logo with iso.png" 
+    alt="Logo" 
+    className="h-10 bg-white p-1 rounded"
+  />
+  <p className="text-sm mt-2 text-black dark:text-white">
+    Powered by <span className="font-semibold">BHASHINI</span>
+  </p>
+</div>
+
 
       <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
       <ThemeToggle theme={theme} setTheme={setTheme} />
