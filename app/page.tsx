@@ -233,8 +233,8 @@ export default function Home() {
       </div>
 
       {/* ASR Section */}
-<div className="w-full max-w-[1000px] ml-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
-        <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
+<div className="mt-6 w-full max-w-[900px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6"> 
+  <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
         <input
           type="file"
           accept="audio/*"
