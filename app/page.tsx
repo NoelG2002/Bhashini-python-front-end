@@ -6,20 +6,17 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
 
-const ThemeToggle = () => {
-  const [theme, setTheme] = useState("light");
-
+const ThemeToggle = ({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) => {
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") || "light";
-    setTheme(storedTheme);
-    document.documentElement.classList.toggle("dark", storedTheme === "dark");
-  }, []);
+    localStorage.setItem("theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+
+    // Change background color based on theme
+    document.body.style.backgroundColor = theme === "dark" ? "#1a202c" : "#f3f4f6"; // Tailwind dark:bg-gray-900 and light:bg-gray-100
+  }, [theme]);
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
@@ -32,6 +29,7 @@ const ThemeToggle = () => {
   );
 };
 
+
 export default function Home() {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
@@ -39,6 +37,13 @@ export default function Home() {
   const [targetLang, setTargetLang] = useState("hi");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    setTheme(storedTheme);
+  }, []);
+
 
   // Separate loading states
   const [translating, setTranslating] = useState(false);
@@ -130,13 +135,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+    <div className={`min-h-screen flex flex-col items-center justify-center transition ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"} p-6`}>
       <Head>
         <title>AgriVaani</title>
       </Head>
 
       <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
-      <ThemeToggle />
+      <ThemeToggle theme={theme} setTheme={setTheme} />
 
       <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
         {/* Left Section: Input */}
