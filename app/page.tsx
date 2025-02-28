@@ -171,8 +171,8 @@ export default function Home() {
   className="text-3xl font-bold mb-4" 
   style={{ 
     fontFamily: "'Restore W00 Black'", 
-    fontWeight: 900, /* Increases font thickness */
-    letterSpacing: "-1px" /* Reduces space between characters */
+    fontWeight: 1500, /* Increases font thickness */
+    letterSpacing: "-2.5px" /* Reduces space between characters */
   }}>
   <span className="text-green-600">AGRI</span>
   <span className="text-red-600">VAANI</span>
