@@ -126,7 +126,7 @@ export default function Home() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setTranslatedText(response.data.translated_text || "Error: No translated text returned from ASR");
+      setTranslatedText(response.data.translated_text);
     } catch (error) {
       console.error("ASR error:", error);
     } finally {
