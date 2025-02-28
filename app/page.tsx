@@ -145,6 +145,11 @@ export default function Home() {
         <title>AgriVaani</title>
       </Head>
 
+   {/* Logo at Top Left */}
+      <div className="fixed top-4 left-4">
+        <img src="/logo with iso.png" alt="Logo" className="h-12" />
+      </div>
+
       <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
       <ThemeToggle theme={theme} setTheme={setTheme} />
 
