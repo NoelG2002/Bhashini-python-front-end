@@ -178,7 +178,7 @@ export default function Home() {
             onClick={handleTranslate}
             className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
           >
-            Translate
+            {loading ? "Translating..." : "Translate"}
           </button>
         </div>
 
@@ -186,7 +186,33 @@ export default function Home() {
         <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
           <h2 className="text-lg font-semibold">Translation:</h2>
           <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
+
+          {/* TTS Button */}
+          <button
+            onClick={handleTextToSpeech}
+            className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
+          >
+            {loading ? "Generating Audio..." : "Play Audio"}
+          </button>
+          {audioUrl && <audio controls className="mt-2 w-full"><source src={audioUrl} type="audio/mp3" /></audio>}
         </div>
+      </div>
+
+      {/* ASR Section */}
+      <div className="mt-6 w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+        <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700"
+        />
+        <button
+          onClick={handleASR}
+          className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700"
+        >
+          {loading ? "Processing..." : "Transcribe Audio"}
+        </button>
       </div>
     </div>
   );
