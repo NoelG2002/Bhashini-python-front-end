@@ -133,7 +133,7 @@ export default function Home() {
         <title>AgriVaani</title>
       </Head>
 
-      <h1 className="text-3xl font-bold mb-4">Bhashini Translator</h1>
+      <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
       <ThemeToggle />
 
       <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
