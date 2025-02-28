@@ -78,7 +78,7 @@ export default function Home() {
   };
 
  const handleTextToSpeech = async () => {
-    setLoading(true);
+    setTtsLoading(true);
     try {
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/tts", {
         source_language: sourceLang,
@@ -102,22 +102,26 @@ export default function Home() {
   };
 
   const handleASR = async () => {
-    if (!audioFile) return;
+    setAsrLoading(true);
+    if (!audioFile) {
+      console.error("No audio file selected");
+      setAsrLoading(false);
+      return;
+    }
 
     try {
-      setAsrLoading(true);
-      setText(""); // Clear previous transcription before processing
-
       const formData = new FormData();
-      formData.append("audio", audioFile);
+      formData.append("audio_file", audioFile);
+      formData.append("source_language", sourceLang);
+      formData.append("target_language", targetLang);
 
-      const response = await axios.post("https://bhashini-python-frd9.onrender.com/asr", formData, {
+      const response = await axios.post("https://bhashini-python-frd9.onrender.com/asr_nmt", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setText(response.data.transcription);
+      setTranslatedText(response.data.translated_text || "Error: No translated text returned from ASR");
     } catch (error) {
-      console.error("ASR Error:", error);
+      console.error("ASR error:", error);
     } finally {
       setAsrLoading(false);
     }
