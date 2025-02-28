@@ -169,7 +169,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
       <ThemeToggle theme={theme} setTheme={setTheme} />
 
-      <div className="w-full max-w-3xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
+      <div className="w-full max-w-[800px]  bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
         {/* Left Section: Input */}
         <div className="w-1/2 flex flex-col space-y-4">
           <div className="flex space-x-2">
@@ -223,7 +223,7 @@ export default function Home() {
         </div>
 
         {/* Right Section: Translated Output */}
-        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+        <div className="max-w-[800px]  p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
           <h2 className="text-lg font-semibold">Translation:</h2>
           <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
 
