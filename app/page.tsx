@@ -165,11 +165,11 @@ export default function Home() {
 
 
 <h1 
-  className="text-3xl font-bold mb-4" 
+  className="text-5xl font-bold mb-4" 
   style={{ 
     fontFamily: "'CamporaClassicHeavy'", 
     fontWeight: 900, /* Increases font thickness */
-    letterSpacing: "-2.5px" /* Reduces space between characters */
+    letterSpacing: "-2px" /* Reduces space between characters */
   }}>
   <span className="text-green-600">AGRI</span>
   <span className="text-red-600">VAANI</span>
