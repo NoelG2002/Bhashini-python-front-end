@@ -150,7 +150,7 @@ export default function Home() {
       : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
   }`}>
       <Head>
-        <title><span className="color-green">Agri</span><span className="color-red">Vaani</span></title>
+        <title>AgriVaani</title>
       </Head>
 
    {/* Logo at Top Left */}
@@ -166,7 +166,7 @@ export default function Home() {
 </div>
 
 
-      <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
+      <h1 className="text-3xl font-bold mb-4"><span className="color-green">Agri</span><span className="color-red">Vaani</span></h1>
       <ThemeToggle theme={theme} setTheme={setTheme} />
 
 <div className="w-full max-w-[800px]  bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4"> 
