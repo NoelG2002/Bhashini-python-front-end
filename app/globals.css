@@ -20,3 +20,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+
+@font-face {
+  font-family: 'CamporaClassicHeavy';
+  src: url('/fonts/camporaclassic-heavy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
