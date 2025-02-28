@@ -201,7 +201,7 @@ export default function Home() {
           <button
             onClick={handleTextToSpeech}
             className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
-            disabled={ttsLoading || !translatedText}
+            disabled={ttsLoading}
           >
             {ttsLoading ? "Generating..." : "Generate Audio "}
           </button>
