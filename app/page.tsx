@@ -148,7 +148,7 @@ export default function Home() {
    {/* Logo at Top Left */}
       <div className="fixed top-4 left-4">
         <img src="/logo with iso.png" alt="Logo" className="h-10" />
-        <p className="text-sm text-gray-600 mt-2">Powered by BHASHINI<span className="font-semibold">{example}</span></p>
+        <p className="text-sm text-gray-600 mt-2">Powered by <span className="font-semibold">BHASHINI</span></p>
       </div>
 
       <h1 className="text-3xl font-bold mb-4">AgriVaani</h1>
