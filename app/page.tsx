@@ -129,7 +129,7 @@ export default function Home() {
     }
   };
 
-return (
+ return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
       <Head>
         <title>Bhashini - Translator</title>
@@ -174,25 +174,18 @@ return (
             rows={4}
           />
 
-          <div className="flex space-x-2">
-            <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700">
-              Translate
-            </button>
-            <button onClick={handleTextToSpeech} className="w-1/3 bg-green-600 text-white p-2 rounded-lg hover:bg-green-700">
-              Text-to-Speech
-            </button>
-            <button onClick={handleASR} className="w-1/3 bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600">
-              Speech to Text
-            </button>
-          </div>
+          <button
+            onClick={handleTranslate}
+            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+          >
+            Translate
+          </button>
         </div>
 
         {/* Right Section: Translated Output */}
         <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
           <h2 className="text-lg font-semibold">Translation:</h2>
           <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
-
-          {audioUrl && <audio controls src={audioUrl} className="w-full mt-2" />}
         </div>
       </div>
     </div>
