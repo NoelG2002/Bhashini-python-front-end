@@ -1,18 +1,19 @@
 
+
 "use client";
 
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Head from "next/head";
-import { useState, useEffect, useCallback } from "react";
 
-const ThemeToggle = ({ theme, setTheme }) => {
-  const memoizedSetTheme = useCallback(setTheme, []);
+const ThemeToggle = () => {
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || "light";
-    memoizedSetTheme(storedTheme);
+    setTheme(storedTheme);
     document.documentElement.classList.toggle("dark", storedTheme === "dark");
-  }, [memoizedSetTheme]);
+  }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -38,8 +39,6 @@ export default function Home() {
   const [targetLang, setTargetLang] = useState("hi");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [theme, setTheme] = useState("light");
-
 
   // Separate loading states
   const [translating, setTranslating] = useState(false);
@@ -131,9 +130,7 @@ export default function Home() {
   };
 
   return (
-<div className={`min-h-screen flex flex-col items-center justify-center ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
-      } p-6`}>      
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
       <Head>
         <title>AgriVaani</title>
       </Head>
