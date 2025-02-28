@@ -223,7 +223,7 @@ export default function Home() {
         </div>
 
         {/* Right Section: Translated Output */}
-        <div className="max-w-[800px]  p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
           <h2 className="text-lg font-semibold">Translation:</h2>
           <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
 
@@ -233,7 +233,7 @@ export default function Home() {
       </div>
 
       {/* ASR Section */}
-      <div className="mt-6 w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+      <div className="mt-6 w-full max-w-[800px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
         <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
         <input
           type="file"
