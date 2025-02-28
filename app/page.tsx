@@ -167,7 +167,7 @@ export default function Home() {
 </div>
 
 
-<h1 className="text-3xl font-bold mb-4" style={{ fontFamily: "'Restore W00 Black', sans-serif" }}>
+<h1 className="text-3xl font-bold mb-4" style={{ fontFamily: "'Restore W00 Black'" }}>
         <span className="text-green-600">Agri</span>
         <span className="text-red-600">Vaani</span>
 </h1>
