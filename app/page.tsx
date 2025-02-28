@@ -158,7 +158,7 @@ export default function Home() {
   <img 
     src="/logo with iso.png" 
     alt="Logo" 
-    className="h-12 w-48 bg-white p-1 rounded"
+    className="h-12 w-42 bg-white p-1 rounded"
   />
   <p className="text-sm mt-2 text-black dark:text-white">
     Powered by <span className="font-semibold">BHASHINI</span>
