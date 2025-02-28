@@ -130,7 +130,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
       <Head>
-        <title>Bhashini - Translator</title>
+        <title>AgriVaani</title>
       </Head>
 
       <h1 className="text-3xl font-bold mb-4">Bhashini Translator</h1>
@@ -177,7 +177,7 @@ export default function Home() {
             className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
             disabled={translating}
           >
-            {translating ? "Translating..." : "Translate"}
+            {translating ? "Translating..." : "Translate the text"}
           </button>
         </div>
 
@@ -192,7 +192,7 @@ export default function Home() {
             className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
             disabled={ttsLoading || !translatedText}
           >
-            {ttsLoading ? "Generating Audio..." : "Play Audio"}
+            {ttsLoading ? "Generating..." : "Generate Audio "}
           </button>
       {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
         </div>
