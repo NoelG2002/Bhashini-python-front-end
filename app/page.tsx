@@ -128,8 +128,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
-      <Head>
+<div className={`min-h-screen flex flex-col items-center justify-center transition-colors duration-500 ${
+    theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+  } p-6`}>
+  <Head>
         <title>AgriVaani</title>
       </Head>
 
