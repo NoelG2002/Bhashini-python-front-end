@@ -36,144 +36,177 @@ export default function Home() {
   const [sourceLang, setSourceLang] = useState("en");
   const [targetLang, setTargetLang] = useState("hi");
   const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+  // Separate loading states
+  const [translating, setTranslating] = useState(false);
+  const [ttsLoading, setTtsLoading] = useState(false);
+  const [asrLoading, setAsrLoading] = useState(false);
 
   const languages = [
     { code: "as", label: "Assamese" },
     { code: "bn", label: "Bengali" },
-    { code: "brx", label: "Bodo" },
-    { code: "doi", label: "Dogri" },
     { code: "en", label: "English" },
-    { code: "gom", label: "Konkani" },
     { code: "hi", label: "Hindi" },
-    { code: "ks", label: "Kashmiri" },
-    { code: "mai", label: "Maithili" },
     { code: "ml", label: "Malayalam" },
     { code: "mr", label: "Marathi" },
-    { code: "mni", label: "Manipuri" },
     { code: "ne", label: "Nepali" },
     { code: "or", label: "Odia" },
     { code: "pa", label: "Punjabi" },
-    { code: "sa", label: "Sanskrit" },
-    { code: "sat", label: "Santali" },
-    { code: "sd", label: "Sindhi" },
     { code: "ta", label: "Tamil" },
     { code: "te", label: "Telugu" },
     { code: "ur", label: "Urdu" },
   ];
 
   const handleTranslate = async () => {
-    setLoading(true);
     try {
+      setTranslating(true);
+      setTranslatedText(""); // Reset previous translation before new request
+
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/translate", {
         source_language: sourceLang,
         target_language: targetLang,
         text: text,
       });
+
       setTranslatedText(response.data.translated_text);
     } catch (error) {
       console.error("Translation error:", error);
     } finally {
-      setLoading(false);
+      setTranslating(false);
     }
   };
 
   const handleTextToSpeech = async () => {
-    setLoading(true);
+    if (!translatedText) return; // Ensure translation exists
+
     try {
+      setTtsLoading(true);
+      setAudioUrl(null); // Reset previous audio before new request
+
       const response = await axios.post("https://bhashini-python-frd9.onrender.com/tts", {
-        source_language: sourceLang,
-        target_language: targetLang,
-        text: text,
+        language: targetLang,
+        text: translatedText,
       });
 
-      const audioBase64 = response.data.audio_base64;
-      const audioBlob = new Blob([
-        new Uint8Array(atob(audioBase64).split("").map((char) => char.charCodeAt(0))),
-      ], { type: "audio/wav" });
-      
-      const newAudioUrl = URL.createObjectURL(audioBlob);
-      setAudioUrl(newAudioUrl);
-      new Audio(newAudioUrl).play();
+      setAudioUrl(response.data.audio_url);
     } catch (error) {
-      console.error("TTS error:", error);
+      console.error("TTS Error:", error);
     } finally {
-      setLoading(false);
+      setTtsLoading(false);
     }
   };
 
   const handleASR = async () => {
-    setLoading(true);
-    if (!audioFile) {
-      console.error("No audio file selected");
-      setLoading(false);
-      return;
-    }
+    if (!audioFile) return;
 
     try {
-      const formData = new FormData();
-      formData.append("audio_file", audioFile);
-      formData.append("source_language", sourceLang);
-      formData.append("target_language", targetLang);
+      setAsrLoading(true);
+      setText(""); // Clear previous transcription before processing
 
-      const response = await axios.post("https://bhashini-python-frd9.onrender.com/asr_nmt", formData, {
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+
+      const response = await axios.post("https://bhashini-python-frd9.onrender.com/asr", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setTranslatedText(response.data.translated_text || "Error: No translated text returned from ASR");
+      setText(response.data.transcription);
     } catch (error) {
-      console.error("ASR error:", error);
+      console.error("ASR Error:", error);
     } finally {
-      setLoading(false);
+      setAsrLoading(false);
     }
   };
 
-return (
-  <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-    <Head>
-      <title>Bhashini - Translate</title>
-    </Head>
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+      <Head>
+        <title>Bhashini - Translator</title>
+      </Head>
 
-    <h1 className="text-3xl font-bold mb-4 text-center">Bhashini Translator</h1>
-    <ThemeToggle />
+      <h1 className="text-3xl font-bold mb-4">Bhashini Translator</h1>
+      <ThemeToggle />
 
-    <div className="w-full max-w-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 space-y-4">
-      <div className="flex space-x-2">
-        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
-          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-        </select>
-        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
-          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-        </select>
+      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4">
+        {/* Left Section: Input */}
+        <div className="w-1/2 flex flex-col space-y-4">
+          <div className="flex space-x-2">
+            <select
+              value={sourceLang}
+              onChange={(e) => setSourceLang(e.target.value)}
+              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={targetLang}
+              onChange={(e) => setTargetLang(e.target.value)}
+              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <textarea
+            className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Enter text to translate"
+            rows={4}
+          />
+
+          <button
+            onClick={handleTranslate}
+            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+            disabled={translating}
+          >
+            {translating ? "Translating..." : "Translate"}
+          </button>
+        </div>
+
+        {/* Right Section: Translated Output */}
+        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+          <h2 className="text-lg font-semibold">Translation:</h2>
+          <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
+
+          {/* TTS Button */}
+          <button
+            onClick={handleTextToSpeech}
+            className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
+            disabled={ttsLoading || !translatedText}
+          >
+            {ttsLoading ? "Generating Audio..." : "Play Audio"}
+          </button>
+          {audioUrl && <audio controls className="mt-2 w-full"><source src={audioUrl} type="audio/mp3" /></audio>}
+        </div>
       </div>
 
-      <textarea className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500" 
-        value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" rows={3} />
-
-      <div className="flex space-x-2">
-        <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
-          Translate
+      {/* ASR Section */}
+      <div className="mt-6 w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+        <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700"
+        />
+        <button
+          onClick={handleASR}
+          className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700"
+          disabled={asrLoading || !audioFile}
+        >
+          {asrLoading ? "Processing..." : "Transcribe Audio"}
         </button>
-        <button onClick={handleTextToSpeech} className="w-1/3 bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition">
-          Text-to-Speech
-        </button>
-        <button onClick={handleASR} className="w-1/3 bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition">
-          Speech to Text
-        </button>
-      </div>
-
-      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
-
-      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
-
-      {loading && <p className="text-center text-blue-500">Processing...</p>}
-
-      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Translation:</h2>
-        <p className="mt-2 text-gray-900 dark:text-gray-200">{translatedText}</p>
       </div>
     </div>
-  </div>
-);
+  );
 }
