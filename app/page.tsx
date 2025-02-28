@@ -194,7 +194,7 @@ export default function Home() {
           >
             {ttsLoading ? "Generating Audio..." : "Play Audio"}
           </button>
-          {audioUrl && <audio controls className="mt-2 w-full"><source src={newaudioUrl} type="audio/mp3" /></audio>}
+          {audioUrl && <audio controls className="mt-2 w-full"><source src={audioUrl} type="audio/mp3" /></audio>}
         </div>
       </div>
 
