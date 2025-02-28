@@ -150,7 +150,7 @@ export default function Home() {
       : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
   }`}>
       <Head>
-        <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet">
+        <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
         <title>AgriVaani</title>
       </Head>
 
