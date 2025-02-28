@@ -150,6 +150,8 @@ export default function Home() {
       : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
   }`}>
       <Head>
+        <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet" />
+
         <title>AgriVaani</title>
       </Head>
 
@@ -166,9 +168,9 @@ export default function Home() {
 </div>
 
 
-<h1 className="text-3xl font-bold mb-4">
-  <span className="text-green-600">Agri</span>
-  <span className="text-red-600">Vaani</span>
+<h1 className="text-3xl font-bold mb-4" style={{ fontFamily: '"Rye", cursive' }}>
+        <span className="text-green-600">Agri</span>
+        <span className="text-red-600">Vaani</span>
 </h1>
   
   <ThemeToggle theme={theme} setTheme={setTheme} />
