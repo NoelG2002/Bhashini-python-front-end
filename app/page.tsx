@@ -129,43 +129,51 @@ export default function Home() {
     }
   };
 
- return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <Head>
-        <title>Bhashini - Translate</title>
-      </Head>
-      <ThemeToggle />
+return (
+  <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <Head>
+      <title>Bhashini - Translate</title>
+    </Head>
 
-      <h1 className="text-3xl font-bold mb-4 text-center">Bhashini Translator</h1>
+    <h1 className="text-3xl font-bold mb-4 text-center">Bhashini Translator</h1>
+    <ThemeToggle />
 
-      <div className="w-full max-w-5xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-        {/* Left Input Section */}
-        <div className="w-full md:w-1/2 flex flex-col space-y-2">
-          <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
-            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-          </select>
-          <textarea
-            className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter text to translate"
-            rows={5}
-          />
-          <button onClick={handleTranslate} className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
-            Translate
-          </button>
-        </div>
+    <div className="w-full max-w-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 space-y-4">
+      <div className="flex space-x-2">
+        <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
+          {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
+        </select>
+      </div>
 
-        {/* Right Output Section */}
-        <div className="w-full md:w-1/2 flex flex-col space-y-2">
-          <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded border bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500">
-            {languages.map((lang) => <option key={lang.code} value={lang.code}>{lang.label}</option>)}
-          </select>
-          <div className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 min-h-[120px]">
-            {loading ? <p className="text-center text-blue-500">Translating...</p> : translatedText || "Translation will appear here"}
-          </div>
-        </div>
+      <textarea className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500" 
+        value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text to translate" rows={3} />
+
+      <div className="flex space-x-2">
+        <button onClick={handleTranslate} className="w-1/3 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
+          Translate
+        </button>
+        <button onClick={handleTextToSpeech} className="w-1/3 bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition">
+          Text-to-Speech
+        </button>
+        <button onClick={handleASR} className="w-1/3 bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition">
+          Speech to Text
+        </button>
+      </div>
+
+      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
+
+      <input type="file" onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)} accept="audio/*" className="w-full border p-2 rounded bg-gray-50 dark:bg-gray-700 mt-1 focus:ring-2 focus:ring-blue-500" />
+
+      {loading && <p className="text-center text-blue-500">Processing...</p>}
+
+      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Translation:</h2>
+        <p className="mt-2 text-gray-900 dark:text-gray-200">{translatedText}</p>
       </div>
     </div>
-  );
+  </div>
+);
 }
