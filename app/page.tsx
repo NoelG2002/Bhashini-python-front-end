@@ -150,7 +150,7 @@ export default function Home() {
       : "bg-gradient-to-br from-green-200 via-green-300 to-teal-200 text-gray-900"
   }`}>
       <Head>
-        <title>AgriVaani</title>
+        <title><span className="color-green">Agri</span><span className="color-red">Vaani</span></title>
       </Head>
 
    {/* Logo at Top Left */}
