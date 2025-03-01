@@ -144,7 +144,7 @@ export default function Home() {
 
  return (
   <div 
-    className="min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 bg-cover bg-center mt-[-20px]" 
+    className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-500 bg-cover bg-center mt-[-20px]" 
     style={{ backgroundImage: "url('/background.jpg')" }}>
     <Head>
       <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
