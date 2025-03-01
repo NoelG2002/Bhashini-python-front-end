@@ -142,122 +142,120 @@ export default function Home() {
     }
   };
 
-  return (
+ return (
 <div 
   className="min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500 bg-cover bg-center" 
   style={{ backgroundImage: "url('/background.jpg')" }}>
+
   <Head>
-        <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
-        <title>AgriVaani</title>
-      </Head>
+    <link href="https://db.onlinewebfonts.com/c/cd88cb7fee9e817fb5d3c577de740941?family=Restore+W00+Black" rel="stylesheet"/>
+    <title>AgriVaani</title>
+  </Head>
 
-   {/* Logo at Top Left */}
-      <div className="fixed top-2 left-2">
-  <img 
-    src="/logo with iso.png" 
-    alt="Logo" 
-    className="h-12 w-42 bg-white p-0.5 rounded"
-  />
-  <p className="text-sm mt-2 text-black dark:text-white">
-    Powered by <span className="font-semibold">BHASHINI API</span>
-  </p>
-</div>
+  {/* Logo at Top Left */}
+  <div className="fixed top-2 left-2">
+    <img 
+      src="/logo with iso.png" 
+      alt="Logo" 
+      className="h-12 w-42 bg-white p-0.5 rounded border-2 border-gray-400"
+    />
+    <p className="text-sm mt-2 text-black dark:text-white">
+      Powered by <span className="font-semibold">BHASHINI API</span>
+    </p>
+  </div>
 
+  <h1 
+    className="text-5xl font-bold mb-4" 
+    style={{ 
+      fontFamily: "'CamporaClassicHeavy'", 
+      fontWeight: 900, 
+      letterSpacing: "-3px"
+    }}>
+    <span className="text-green-600">AGRI</span>
+    <span className="text-red-600">VAANI</span>
+  </h1>
 
-<h1 
-  className="text-5xl font-bold mb-4" 
-  style={{ 
-    fontFamily: "'CamporaClassicHeavy'", 
-    fontWeight: 900, /* Increases font thickness */
-    letterSpacing: "-3px" /* Reduces space between characters */
-  }}>
-  <span className="text-green-600">AGRI</span>
-  <span className="text-red-600">VAANI</span>
-</h1>
-
-  
   <ThemeToggle theme={theme} setTheme={setTheme} />
 
-<div className="w-full max-w-[800px]  bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4"> 
-  {/* Left Section: Input */}
-        <div className="w-1/2 flex flex-col space-y-4">
-          <div className="flex space-x-2">
-            <select
-              value={sourceLang}
-              onChange={(e) => setSourceLang(e.target.value)}
-              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
-            >
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              className="w-1/2 p-2 rounded border bg-gray-50 dark:bg-gray-700"
-            >
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <textarea
-            className="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter text to translate"
-            rows={4}
-          />
-
-          <button
-            onClick={handleTranslate}
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
-            disabled={translating}
-          >
-            {translating ? "Translating..." : "Translate text"}
-          </button>
-          {/* TTS Button */}
-          <button
-            onClick={handleTextToSpeech}
-            className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
-            disabled={ttsLoading}
-          >
-            {ttsLoading ? "Generating..." : "Generate Audio "}
-          </button>
-        </div>
-
-        {/* Right Section: Translated Output */}
-        <div className="w-1/2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h2 className="text-lg font-semibold">Translation:</h2>
-          <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
-
-          
-      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
-        </div>
-      </div>
-
-      {/* ASR Section */}
-<div className="mt-6 w-full max-w-[800px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6"> 
-  <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700"
-        />
-        <button
-          onClick={handleASR}
-          className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700"
-          disabled={asrLoading || !audioFile}
+  <div className="w-full max-w-[800px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex space-x-4 border-2 border-gray-300"> 
+    {/* Left Section: Input */}
+    <div className="w-1/2 flex flex-col space-y-4">
+      <div className="flex space-x-2">
+        <select
+          value={sourceLang}
+          onChange={(e) => setSourceLang(e.target.value)}
+          className="w-1/2 p-2 rounded border-2 border-gray-300 hover:border-gray-400 bg-gray-50 dark:bg-gray-700"
         >
-          {asrLoading ? "Processing..." : "Transcribe Audio"}
-        </button>
+          {languages.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={targetLang}
+          onChange={(e) => setTargetLang(e.target.value)}
+          className="w-1/2 p-2 rounded border-2 border-gray-300 hover:border-gray-400 bg-gray-50 dark:bg-gray-700"
+        >
+          {languages.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
       </div>
+
+      <textarea
+        className="w-full p-3 border-2 border-gray-300 hover:border-gray-400 rounded bg-gray-50 dark:bg-gray-700"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Enter text to translate"
+        rows={4}
+      />
+
+      <button
+        onClick={handleTranslate}
+        className="w-full bg-blue-600 text-white p-2 rounded-lg border-2 border-blue-800 hover:border-blue-900 hover:bg-blue-700"
+        disabled={translating}
+      >
+        {translating ? "Translating..." : "Translate text"}
+      </button>
+
+      {/* TTS Button */}
+      <button
+        onClick={handleTextToSpeech}
+        className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg border-2 border-green-800 hover:border-green-900 hover:bg-green-700"
+        disabled={ttsLoading}
+      >
+        {ttsLoading ? "Generating..." : "Generate Audio"}
+      </button>
     </div>
-  );
+
+    {/* Right Section: Translated Output */}
+    <div className="w-1/2 p-4 border-2 border-gray-300 hover:border-gray-400 rounded-lg bg-gray-50 dark:bg-gray-700">
+      <h2 className="text-lg font-semibold">Translation:</h2>
+      <p className="mt-2">{translatedText || "Your translated text will appear here."}</p>
+      {audioUrl && <audio controls src={audioUrl} className="w-full mt-2 rounded-lg shadow-md" />}
+    </div>
+  </div>
+
+  {/* ASR Section */}
+  <div className="mt-6 w-full max-w-[800px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 border-2 border-gray-300 hover:border-gray-400"> 
+    <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
+    <input
+      type="file"
+      accept="audio/*"
+      onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+      className="w-full p-2 border-2 border-gray-300 hover:border-gray-400 rounded bg-gray-50 dark:bg-gray-700"
+    />
+    <button
+      onClick={handleASR}
+      className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg border-2 border-purple-800 hover:border-purple-900 hover:bg-purple-700"
+      disabled={asrLoading || !audioFile}
+    >
+      {asrLoading ? "Processing..." : "Transcribe Audio"}
+    </button>
+  </div>
+</div>
+);
 }
