@@ -239,7 +239,7 @@ export default function Home() {
     </div>
 
     {/* ASR Section */}
-<div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 border-2 border-gray-400 dark:border-gray-600"> 
+<div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 border-2 border-gray-400 dark:border-gray-600 mt[-20px]"> 
   <div className="flex items-center space-x-4">
     <h2 className="text-lg font-semibold">Speech Recognition (ASR)</h2>
     <input
