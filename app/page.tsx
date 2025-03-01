@@ -239,22 +239,25 @@ export default function Home() {
     </div>
 
     {/* ASR Section */}
-    <div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-6 border-2 border-gray-400 dark:border-gray-600"> 
-      <h2 className="text-lg font-semibold mb-2">Speech Recognition (ASR)</h2>
-      <input
-        type="file"
-        accept="audio/*"
-        onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
-        className="w-full p-2 border-2 border-gray-400 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700"
-      />
-      <button
-        onClick={handleASR}
-        className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 border-2 border-gray-500 dark:border-gray-700"
-        disabled={asrLoading || !audioFile}
-      >
-        {asrLoading ? "Processing..." : "Transcribe Audio"}
-      </button>
-    </div>
+<div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-6 border-2 border-gray-400 dark:border-gray-600"> 
+  <div className="flex items-center space-x-4">
+    <h2 className="text-lg font-semibold">Speech Recognition (ASR)</h2>
+    <input
+      type="file"
+      accept="audio/*"
+      onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+      className="p-1 border-2 border-gray-400 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700"
+    />
+  </div>
+  <button
+    onClick={handleASR}
+    className="mt-4 w-full bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 border-2 border-gray-500 dark:border-gray-700"
+    disabled={asrLoading || !audioFile}
+  >
+    {asrLoading ? "Processing..." : "Transcribe Audio"}
+  </button>
+</div>
+
   </div>
 );
 }
