@@ -176,7 +176,7 @@ export default function Home() {
 
     <ThemeToggle theme={theme} setTheme={setTheme} />
 
-    <div className="w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 flex space-x-4 border-2 border-gray-400 dark:border-gray-600 mt[-20px]"> 
+    <div className="w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 flex space-x-4 border-2 border-gray-400 dark:border-gray-600 mt[-40px]"> 
       {/* Left Section: Input */}
       <div className="w-1/2 flex flex-col space-y-4">
         <div className="flex space-x-2">
@@ -239,7 +239,7 @@ export default function Home() {
     </div>
 
     {/* ASR Section */}
-<div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 border-2 border-gray-400 dark:border-gray-600 mt[-20px]"> 
+<div className="mt-6 w-full max-w-[800px] bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-3 border-2 border-gray-400 dark:border-gray-600 mt[-40px]"> 
   <div className="flex items-center space-x-4">
     <h2 className="text-lg font-semibold">Speech Recognition (ASR)</h2>
     <input
