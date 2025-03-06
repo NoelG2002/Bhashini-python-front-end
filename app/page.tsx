@@ -78,7 +78,7 @@ export default function Home() {
       setTranslating(true);
       setTranslatedText(""); // Reset previous translation before new request
 
-      const response = await axios.post("https://bhashini-python.onrender.com/translate", {
+      const response = await axios.post("https://bhashini-python-production.up.railway.app/translate", {
         source_language: sourceLang,
         target_language: targetLang,
         text: text,
@@ -95,7 +95,7 @@ export default function Home() {
  const handleTextToSpeech = async () => {
     setTtsLoading(true);
     try {
-      const response = await axios.post("https://bhashini-python.onrender.com/tts", {
+      const response = await axios.post("https://bhashini-python-production.up.railway.app/tts", {
         source_language: sourceLang,
         target_language: targetLang,
         text: text,
@@ -130,7 +130,7 @@ export default function Home() {
       formData.append("source_language", sourceLang);
       formData.append("target_language", targetLang);
 
-      const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
+      const response = await axios.post("https://bhashini-python-production.up.railway.app/asr_nmt", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
