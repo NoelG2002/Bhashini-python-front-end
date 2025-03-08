@@ -19,9 +19,32 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
+/* Container for consistent spacing */
+.container {
+  @apply w-full max-w-screen-lg mx-auto px-4 sm:px-6 md:px-8;
+}
 
+/* Typography Adjustments */
+h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  @apply font-bold leading-tight;
+}
+
+p {
+  @apply text-sm sm:text-base leading-relaxed;
+}
+
+/* Prevent layout shifts in dark mode */
+html {
+  color-scheme: dark light;
+}
+
+/* Custom font */
 @font-face {
   font-family: 'CamporaClassicHeavy';
   src: url('/fonts/camporaclassic-heavy.ttf') format('truetype');
