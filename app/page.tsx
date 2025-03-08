@@ -131,7 +131,12 @@ export default function Home() {
       formData.append("target_language", targetLang);
 
       const response = await axios.post("https://bhashini-python.onrender.com/asr_nmt", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+      "Content-Type": "multipart/form-data",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+    },
       });
 
       setTranslatedText(response.data.translated_text || "Error: No translated text returned from ASR");
